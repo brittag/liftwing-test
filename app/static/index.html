@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reference Need + Tone Check Prototype</title>
+  <style>
+    :root {
+      font-family: system-ui, sans-serif;
+      color: #1a1a1a;
+      line-height: 1.4;
+    }
+    body {
+      max-width: 960px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+    }
+    h1 { font-size: 1.35rem; margin-bottom: 0.25rem; }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 1rem; }
+    label { display: block; font-weight: 600; margin: 0.75rem 0 0.25rem; }
+    textarea {
+      width: 100%;
+      min-height: 8rem;
+      box-sizing: border-box;
+      font: inherit;
+      padding: 0.5rem;
+    }
+    input[type="text"] {
+      width: 6rem;
+      font: inherit;
+      padding: 0.35rem 0.5rem;
+    }
+    button {
+      margin-top: 0.75rem;
+      font: inherit;
+      padding: 0.45rem 0.9rem;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.6; cursor: wait; }
+    #status { margin: 0.75rem 0; min-height: 1.25rem; color: #444; }
+    #error { color: #a40000; margin: 0.5rem 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 0.45rem 0.4rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th.sortable { cursor: pointer; user-select: none; }
+    th.sortable:hover { text-decoration: underline; }
+    .num { font-variant-numeric: tabular-nums; }
+    .err { color: #a40000; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Reference Need + Tone Check Prototype</h1>
+  <p class="hint">
+    Paste Wikipedia article titles (one per line). Scores the latest revision’s
+    reference need (higher = more citation-needing sentences still lack cites)
+    and counts paragraphs with Tone Check probability ≥ 0.80 (first 40 paragraphs).
+  </p>
+
+  <form id="form">
+    <label for="titles">Articles</label>
+    <textarea id="titles" placeholder="Bulgarian Deposit Insurance Fund&#10;Albert Einstein&#10;Douglas Adams"></textarea>
+
+    <label for="lang">Language</label>
+    <input id="lang" type="text" value="en" maxlength="12" />
+
+    <div>
+      <button id="submit" type="submit">Score articles</button>
+    </div>
+  </form>
+
+  <p id="status"></p>
+  <p id="error"></p>
+
+  <table id="results" class="hidden">
+    <thead>
+      <tr>
+        <th id="sort-title" class="sortable" title="Click to reverse sort">Title ↕</th>
+        <th id="sort-need" class="sortable" title="Click to reverse sort">Reference need ↕</th>
+        <th id="sort-tone" class="sortable" title="Click to reverse sort">Tone flags ↕</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById("form");
+    const titlesEl = document.getElementById("titles");
+    const langEl = document.getElementById("lang");
+    const submitBtn = document.getElementById("submit");
+    const statusEl = document.getElementById("status");
+    const errorEl = document.getElementById("error");
+    const table = document.getElementById("results");
+    const tbody = table.querySelector("tbody");
+    const sortTitle = document.getElementById("sort-title");
+    const sortNeed = document.getElementById("sort-need");
+    const sortTone = document.getElementById("sort-tone");
+
+    let rows = [];
+    let sortKey = "need";
+    let sortDesc = true;
+
+    function fmtScore(v) {
+      if (v === null || v === undefined) return "—";
+      return (Number(v) * 100).toFixed(1) + "%";
+    }
+
+    function compareRows(a, b) {
+      if (sortKey === "title") {
+        const cmp = (a.title || "").localeCompare(b.title || "", undefined, {
+          sensitivity: "base",
+        });
+        return sortDesc ? -cmp : cmp;
+      }
+      const field = sortKey === "tone" ? "tone_flagged_count" : "reference_need";
+      const av = a[field];
+      const bv = b[field];
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      return sortDesc ? bv - av : av - bv;
+    }
+
+    function render() {
+      const sorted = [...rows].sort(compareRows);
+
+      tbody.innerHTML = "";
+      for (const r of sorted) {
+        const tr = document.createElement("tr");
+        const titleCell = document.createElement("td");
+        if (r.wikipedia_url && !r.error) {
+          const a = document.createElement("a");
+          a.href = r.wikipedia_url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.textContent = r.title;
+          titleCell.appendChild(a);
+        } else {
+          titleCell.textContent = r.title;
+        }
+        if (r.error) {
+          const err = document.createElement("div");
+          err.className = "err";
+          err.textContent = r.error;
+          titleCell.appendChild(err);
+        }
+
+        const need = document.createElement("td");
+        need.className = "num";
+        need.textContent = fmtScore(r.reference_need);
+
+        const tone = document.createElement("td");
+        tone.className = "num";
+        tone.textContent =
+          r.tone_flagged_count === null || r.tone_flagged_count === undefined
+            ? "—"
+            : String(r.tone_flagged_count);
+
+        tr.append(titleCell, need, tone);
+        tbody.appendChild(tr);
+      }
+
+      table.classList.remove("hidden");
+      sortTitle.textContent =
+        sortKey === "title" ? (sortDesc ? "Title ↓" : "Title ↑") : "Title ↕";
+      sortNeed.textContent =
+        sortKey === "need"
+          ? sortDesc
+            ? "Reference need ↓"
+            : "Reference need ↑"
+          : "Reference need ↕";
+      sortTone.textContent =
+        sortKey === "tone"
+          ? sortDesc
+            ? "Tone flags ↓"
+            : "Tone flags ↑"
+          : "Tone flags ↕";
+    }
+
+    function setSort(key) {
+      if (sortKey === key) {
+        sortDesc = !sortDesc;
+      } else {
+        sortKey = key;
+        // Title defaults A→Z; numeric columns default high→low
+        sortDesc = key !== "title";
+      }
+      render();
+    }
+
+    sortTitle.addEventListener("click", () => setSort("title"));
+    sortNeed.addEventListener("click", () => setSort("need"));
+    sortTone.addEventListener("click", () => setSort("tone"));
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorEl.textContent = "";
+      statusEl.textContent = "Working…";
+      submitBtn.disabled = true;
+      table.classList.add("hidden");
+
+      const titles = titlesEl.value
+        .split(/\r?\n/)
+        .map((t) => t.trim())
+        .filter(Boolean);
+      const lang = (langEl.value || "en").trim() || "en";
+
+      try {
+        const resp = await fetch("/api/score-batch", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ titles, lang }),
+        });
+        const data = await resp.json();
+        if (!resp.ok) {
+          throw new Error(data.error || "Request failed");
+        }
+        rows = data.results || [];
+        sortKey = "need";
+        sortDesc = true;
+        statusEl.textContent = `Scored ${rows.length} article(s).`;
+        render();
+      } catch (err) {
+        errorEl.textContent = err.message || String(err);
+        statusEl.textContent = "";
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
