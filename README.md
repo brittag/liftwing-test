@@ -1,9 +1,9 @@
-# Reference Need + NPP Urgency Queue
+# Projo
 
-Flask prototype with two surfaces:
+Flask prototype with two tools:
 
-1. **NPP urgency queue** (`/`) — ranked list of unreviewed English Wikipedia articles
-2. **Paste-titles scorer** (`/score`) — on-demand reference-need + tone check for a few titles
+1. **Articles to improve** (`/`) — paste titles for on-demand reference-need + tone check
+2. **Articles to review** (`/review`) — ranked list of unreviewed English Wikipedia articles
 
 ## Setup
 
@@ -80,5 +80,5 @@ python scripts/fetch_npp_afc_reviewers.py
 python app/app.py
 ```
 
-Open http://localhost:8765 for the queue, or http://localhost:8765/score for
-the paste-titles scorer.
+Open http://localhost:8765 for Articles to improve, or
+http://localhost:8765/review for Articles to review.

@@ -1,8 +1,8 @@
-"""NPP urgency queue + Reference Need / Tone Check prototype.
+"""Projo — Articles to improve (paste-titles scorer) + Articles to review (NPP queue).
 
 Run: python app/app.py
-Open: http://localhost:8765  (ranked queue)
-      http://localhost:8765/score  (paste-titles scorer)
+Open: http://localhost:8765         (Articles to improve)
+      http://localhost:8765/review  (Articles to review)
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ import os
 import sys
 from pathlib import Path
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, redirect, request, send_from_directory
 
 APP_DIR = Path(__file__).resolve().parent
 ROOT = APP_DIR.parent
@@ -30,6 +30,7 @@ PAGE_SIZE = 2000
 SORT_FIELDS = {
     "score": "score",
     "title": "title",
+    "created": "created",
     "views": "avg_daily_views",
     "need": "reference_need",
 }
@@ -59,6 +60,14 @@ def _truthy(value: str | None) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _created_sort_value(created: object) -> float | None:
+    text = str(created or "").strip()
+    digits = text[:14]
+    if len(digits) < 14 or not digits.isdigit():
+        return None
+    return float(digits)
+
+
 def _sort_articles(articles: list[dict], sort: str, descending: bool) -> list[dict]:
     field = SORT_FIELDS.get(sort, "score")
     if field == "title":
@@ -69,10 +78,13 @@ def _sort_articles(articles: list[dict], sort: str, descending: bool) -> list[di
         )
 
     def key(article: dict) -> tuple[int, float]:
-        val = article.get(field)
-        if val is None:
+        if field == "created":
+            numeric = _created_sort_value(article.get("created"))
+        else:
+            val = article.get(field)
+            numeric = None if val is None else float(val)
+        if numeric is None:
             return (1, 0.0)
-        numeric = float(val)
         return (0, -numeric if descending else numeric)
 
     return sorted(articles, key=key)
@@ -80,12 +92,18 @@ def _sort_articles(articles: list[dict], sort: str, descending: bool) -> list[di
 
 @app.get("/")
 def index():
-    return send_from_directory(STATIC_DIR, "index.html")
+    return send_from_directory(STATIC_DIR, "score.html")
+
+
+@app.get("/review")
+def review_page():
+    return send_from_directory(STATIC_DIR, "review.html")
 
 
 @app.get("/score")
-def score_page():
-    return send_from_directory(STATIC_DIR, "score.html")
+def score_page_redirect():
+    """Keep old /score bookmarks working."""
+    return redirect("/", code=301)
 
 
 @app.get("/api/queue")
