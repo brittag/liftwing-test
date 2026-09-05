@@ -82,6 +82,22 @@
     .chip.hot { border-color: #c44; background: #fff0f0; }
     .chip.cool { border-color: #2a7; background: #eefaf2; color: #14633a; }
     .hidden { display: none; }
+    .pager {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      align-items: center;
+      margin: 0.75rem 0;
+      font-size: 0.9rem;
+    }
+    .pager.hidden { display: none; }
+    .pager button[aria-current="page"] {
+      font-weight: 700;
+    }
+    .pager button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
   </style>
 </head>
 <body>
@@ -119,6 +135,7 @@
   <p class="meta" id="meta"></p>
   <p id="status"></p>
   <p id="error"></p>
+  <nav class="pager hidden" data-pager aria-label="Pagination"></nav>
 
   <table id="results" class="hidden">
     <thead>
@@ -132,6 +149,7 @@
     </thead>
     <tbody></tbody>
   </table>
+  <nav class="pager hidden" data-pager aria-label="Pagination"></nav>
 
   <script>
     const statusEl = document.getElementById("status");
@@ -143,6 +161,9 @@
     let rows = [];
     let sortKey = "score";
     let sortDesc = true;
+    let currentPage = 1;
+    let totalPages = 1;
+    let filteredCount = 0;
 
     const HOT = new Set(["ai", "chatgpt", "minor", "ctop", "blocked-creator", "violence", "pov"]);
     const COOL = new Set(["reviewer-creator", "AfC"]);
@@ -169,31 +190,44 @@
       return "chip";
     }
 
-    function compareRows(a, b) {
-      if (sortKey === "title") {
-        const cmp = (a.title || "").localeCompare(b.title || "", undefined, {
-          sensitivity: "base",
-        });
-        return sortDesc ? -cmp : cmp;
+    function renderPagers() {
+      for (const pager of document.querySelectorAll("[data-pager]")) {
+        pager.replaceChildren();
+        const hide = filteredCount === 0 || totalPages <= 1;
+        pager.classList.toggle("hidden", hide);
+        if (hide) continue;
+
+        const prev = document.createElement("button");
+        prev.type = "button";
+        prev.textContent = "Previous";
+        prev.disabled = currentPage <= 1;
+        prev.dataset.page = String(currentPage - 1);
+        pager.appendChild(prev);
+
+        for (let p = 1; p <= totalPages; p++) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = String(p);
+          btn.dataset.page = String(p);
+          if (p === currentPage) {
+            btn.setAttribute("aria-current", "page");
+            btn.disabled = true;
+          }
+          pager.appendChild(btn);
+        }
+
+        const next = document.createElement("button");
+        next.type = "button";
+        next.textContent = "Next";
+        next.disabled = currentPage >= totalPages;
+        next.dataset.page = String(currentPage + 1);
+        pager.appendChild(next);
       }
-      const field =
-        sortKey === "views"
-          ? "avg_daily_views"
-          : sortKey === "need"
-            ? "reference_need"
-            : "score";
-      const av = a[field];
-      const bv = b[field];
-      if (av == null && bv == null) return 0;
-      if (av == null) return 1;
-      if (bv == null) return -1;
-      return sortDesc ? bv - av : av - bv;
     }
 
     function render() {
-      const sorted = [...rows].sort(compareRows);
       tbody.innerHTML = "";
-      for (const r of sorted) {
+      for (const r of rows) {
         const tr = document.createElement("tr");
 
         const score = document.createElement("td");
@@ -237,6 +271,7 @@
 
       table.classList.toggle("hidden", rows.length === 0);
       setSortHeaders();
+      renderPagers();
     }
 
     function setSortHeaders() {
@@ -268,13 +303,25 @@
         sortKey = key;
         sortDesc = key !== "title";
       }
-      render();
+      currentPage = 1;
+      loadQueue();
     }
 
     document.getElementById("sort-score").addEventListener("click", () => setSort("score"));
     document.getElementById("sort-title").addEventListener("click", () => setSort("title"));
     document.getElementById("sort-views").addEventListener("click", () => setSort("views"));
     document.getElementById("sort-need").addEventListener("click", () => setSort("need"));
+
+    for (const pager of document.querySelectorAll("[data-pager]")) {
+      pager.addEventListener("click", (event) => {
+        const btn = event.target.closest("button");
+        if (!btn || btn.disabled) return;
+        const nextPage = Number(btn.dataset.page);
+        if (!nextPage || nextPage === currentPage) return;
+        currentPage = nextPage;
+        loadQueue();
+      });
+    }
 
     function filterParams() {
       const params = new URLSearchParams();
@@ -289,6 +336,9 @@
       ]) {
         if (document.getElementById(id).checked) params.set(id, "1");
       }
+      params.set("page", String(currentPage));
+      params.set("sort", sortKey);
+      params.set("order", sortDesc ? "desc" : "asc");
       return params;
     }
 
@@ -302,19 +352,30 @@
         if (data.error && !(data.articles || []).length) {
           errorEl.textContent = data.error;
           rows = [];
+          filteredCount = 0;
+          totalPages = 1;
+          currentPage = 1;
           metaEl.textContent = "";
           statusEl.textContent = "";
           render();
           return;
         }
         rows = data.articles || [];
-        sortKey = "score";
-        sortDesc = true;
+        filteredCount = data.count || 0;
+        totalPages = data.pages || 1;
+        currentPage = data.page || 1;
+        const perPage = data.per_page || 2000;
+        const from = filteredCount ? (currentPage - 1) * perPage + 1 : 0;
+        const to = (currentPage - 1) * perPage + rows.length;
         const when = data.generated_at
           ? new Date(data.generated_at).toLocaleString()
           : "unknown";
+        const range =
+          filteredCount === 0
+            ? `0 of ${data.total_in_snapshot}`
+            : `${from.toLocaleString()}–${to.toLocaleString()} of ${filteredCount.toLocaleString()} matching · ${Number(data.total_in_snapshot).toLocaleString()} in snapshot`;
         metaEl.textContent =
-          `Snapshot: ${when} · showing ${data.count} of ${data.total_in_snapshot}` +
+          `Snapshot: ${when} · showing ${range}` +
           (data.sql_only ? " · (sql-only refresh)" : "");
         statusEl.textContent = rows.length ? "" : "No articles match filters.";
         render();
@@ -324,21 +385,26 @@
       }
     }
 
+    function loadFromStart() {
+      currentPage = 1;
+      loadQueue();
+    }
+
     let debounce;
     function scheduleLoad() {
       clearTimeout(debounce);
-      debounce = setTimeout(loadQueue, 200);
+      debounce = setTimeout(loadFromStart, 200);
     }
 
     document.getElementById("reload").addEventListener("click", loadQueue);
     document.getElementById("q").addEventListener("input", scheduleLoad);
-    document.getElementById("min_views").addEventListener("change", loadQueue);
+    document.getElementById("min_views").addEventListener("change", loadFromStart);
     for (const id of [
       "has_views", "minors", "blp", "ctop", "ai", "chatgpt", "blocked_creator",
       "reviewer_creator",
       "notability", "pov", "sports", "violence", "afc", "coi", "promotional", "orphan",
     ]) {
-      document.getElementById(id).addEventListener("change", loadQueue);
+      document.getElementById(id).addEventListener("change", loadFromStart);
     }
 
     loadQueue();

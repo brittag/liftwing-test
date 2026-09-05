@@ -8,6 +8,7 @@ Open: http://localhost:8765  (ranked queue)
 from __future__ import annotations
 
 import json
+import math
 import os
 import sys
 from pathlib import Path
@@ -25,6 +26,13 @@ from scoring import score_batch  # noqa: E402
 STATIC_DIR = APP_DIR / "static"
 PORT = int(os.environ.get("PORT", "8765"))
 SNAPSHOT_FILE = ROOT / SNAPSHOT_PATH
+PAGE_SIZE = 2000
+SORT_FIELDS = {
+    "score": "score",
+    "title": "title",
+    "views": "avg_daily_views",
+    "need": "reference_need",
+}
 
 app = Flask(__name__, static_folder=str(STATIC_DIR), static_url_path="")
 
@@ -49,6 +57,25 @@ def _truthy(value: str | None) -> bool:
     if value is None:
         return False
     return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _sort_articles(articles: list[dict], sort: str, descending: bool) -> list[dict]:
+    field = SORT_FIELDS.get(sort, "score")
+    if field == "title":
+        return sorted(
+            articles,
+            key=lambda a: (a.get("title") or "").casefold(),
+            reverse=descending,
+        )
+
+    def key(article: dict) -> tuple[int, float]:
+        val = article.get(field)
+        if val is None:
+            return (1, 0.0)
+        numeric = float(val)
+        return (0, -numeric if descending else numeric)
+
+    return sorted(articles, key=key)
 
 
 @app.get("/")
@@ -136,15 +163,31 @@ def api_queue():
         return True
 
     filtered = [a for a in articles if keep(a)]
+
+    sort = (request.args.get("sort") or "score").strip().lower()
+    if sort not in SORT_FIELDS:
+        sort = "score"
+    descending = (request.args.get("order") or "desc").strip().lower() != "asc"
+    filtered = _sort_articles(filtered, sort, descending)
+
+    total = len(filtered)
+    pages = max(1, math.ceil(total / PAGE_SIZE)) if total else 1
+    page = request.args.get("page", default=1, type=int) or 1
+    page = min(max(1, page), pages)
+    start = (page - 1) * PAGE_SIZE
+
     return jsonify(
         {
             "generated_at": data.get("generated_at"),
             "lang": data.get("lang", "en"),
-            "count": len(filtered),
+            "count": total,
+            "page": page,
+            "per_page": PAGE_SIZE,
+            "pages": pages,
             "total_in_snapshot": data.get("count", len(articles)),
             "sql_only": data.get("sql_only"),
             "error": data.get("error"),
-            "articles": filtered,
+            "articles": filtered[start : start + PAGE_SIZE],
         }
     )
 
