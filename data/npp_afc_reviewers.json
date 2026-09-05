@@ -1,0 +1,4219 @@
+{
+  "generated_at": "2026-09-05T16:28:42.043885+00:00",
+  "source": "sql",
+  "definitions": {
+    "NPR": "user_groups.ug_group = patroller (active expiry)",
+    "AfC": "user page in Category:Wikipedia Articles for Creation reviewers"
+  },
+  "count": 1359,
+  "npr_count": 890,
+  "afc_count": 598,
+  "reviewers": {
+    "'zinbot": [
+      "NPR"
+    ],
+    "1989": [
+      "NPR"
+    ],
+    "1990'sguy": [
+      "NPR"
+    ],
+    "1997kB": [
+      "NPR"
+    ],
+    "1brianm7": [
+      "NPR"
+    ],
+    "1ctinus": [
+      "NPR"
+    ],
+    "1TWO3Writer": [
+      "AfC",
+      "NPR"
+    ],
+    "24fan24": [
+      "AfC"
+    ],
+    "3PPYB6": [
+      "NPR"
+    ],
+    "45dogs": [
+      "AfC"
+    ],
+    "49ersBelongInSanFrancisco": [
+      "NPR"
+    ],
+    "511KeV": [
+      "NPR"
+    ],
+    "7&6=thirteen": [
+      "NPR"
+    ],
+    "78.26": [
+      "AfC"
+    ],
+    "94rain": [
+      "NPR"
+    ],
+    "A. B.": [
+      "NPR"
+    ],
+    "A.Minkowiski": [
+      "AfC"
+    ],
+    "A09": [
+      "NPR"
+    ],
+    "A2soup": [
+      "NPR"
+    ],
+    "A412": [
+      "NPR"
+    ],
+    "Aafi": [
+      "NPR"
+    ],
+    "Ab207": [
+      "NPR"
+    ],
+    "Abdullah Alam": [
+      "AfC"
+    ],
+    "Abdullah1099": [
+      "AfC"
+    ],
+    "AbhisheksinghWIKI": [
+      "AfC"
+    ],
+    "Abiodun Ayobami": [
+      "AfC"
+    ],
+    "Abo Yemen": [
+      "AfC",
+      "NPR"
+    ],
+    "Acebulf": [
+      "NPR"
+    ],
+    "ACoolWikiEditor": [
+      "AfC"
+    ],
+    "Actualcpscm": [
+      "NPR"
+    ],
+    "Adamsquire86": [
+      "NPR"
+    ],
+    "Adamstom.97": [
+      "NPR"
+    ],
+    "Adamtt9": [
+      "NPR"
+    ],
+    "Adavis444": [
+      "AfC"
+    ],
+    "Adog": [
+      "NPR"
+    ],
+    "Aesthetics editors": [
+      "AfC"
+    ],
+    "Afonso Dimas Martins": [
+      "NPR"
+    ],
+    "Agent VII": [
+      "NPR"
+    ],
+    "Agent Viraj": [
+      "AfC",
+      "NPR"
+    ],
+    "AgentB1": [
+      "AfC"
+    ],
+    "Agtx": [
+      "NPR"
+    ],
+    "Ahecht": [
+      "AfC"
+    ],
+    "Ahnoneemoos": [
+      "AfC"
+    ],
+    "Aintabli": [
+      "NPR"
+    ],
+    "AirshipJungleman29": [
+      "NPR"
+    ],
+    "Akazinakiwe": [
+      "AfC"
+    ],
+    "Akradecki": [
+      "AfC"
+    ],
+    "Alalch E.": [
+      "NPR"
+    ],
+    "Alanna the Brave": [
+      "NPR"
+    ],
+    "Alansohn": [
+      "NPR"
+    ],
+    "AleatoryPonderings": [
+      "NPR"
+    ],
+    "Alexandermcnabb": [
+      "NPR"
+    ],
+    "AlexandraAVX": [
+      "NPR"
+    ],
+    "Alextejthompson": [
+      "NPR"
+    ],
+    "Allan Nonymous": [
+      "NPR"
+    ],
+    "AllCatsAreGrey": [
+      "NPR"
+    ],
+    "Allisoneil": [
+      "AfC"
+    ],
+    "AllyD": [
+      "NPR"
+    ],
+    "Alpha Monarch": [
+      "AfC"
+    ],
+    "Alpha Quadrant": [
+      "AfC"
+    ],
+    "Alpha3031": [
+      "NPR"
+    ],
+    "AlphaBetaGamma": [
+      "AfC",
+      "NPR"
+    ],
+    "AlphaCore": [
+      "AfC"
+    ],
+    "Alrich44": [
+      "AfC"
+    ],
+    "Alsee": [
+      "NPR"
+    ],
+    "AlwaysBlaze": [
+      "AfC"
+    ],
+    "Alyo": [
+      "AfC",
+      "NPR"
+    ],
+    "AmaryllisGardener": [
+      "AfC"
+    ],
+    "Amccann421": [
+      "NPR"
+    ],
+    "Ammarpad": [
+      "NPR"
+    ],
+    "Ampil": [
+      "AfC",
+      "NPR"
+    ],
+    "AmritasyaPutra": [
+      "AfC"
+    ],
+    "Anasskoko": [
+      "AfC"
+    ],
+    "Anaxial": [
+      "NPR"
+    ],
+    "Anchan Balti": [
+      "AfC"
+    ],
+    "Andrew Davidson": [
+      "NPR"
+    ],
+    "Andrew nyr": [
+      "AfC",
+      "NPR"
+    ],
+    "AngusWOOF": [
+      "NPR"
+    ],
+    "Animalparty": [
+      "NPR"
+    ],
+    "Anne Delong": [
+      "AfC"
+    ],
+    "Annh07": [
+      "NPR"
+    ],
+    "AntanO": [
+      "NPR"
+    ],
+    "Anthonyhcole": [
+      "NPR"
+    ],
+    "AntiCompositeNumber": [
+      "NPR"
+    ],
+    "Antiqueight": [
+      "NPR"
+    ],
+    "Anuwrites": [
+      "AfC"
+    ],
+    "APK": [
+      "NPR"
+    ],
+    "Aplucas0703": [
+      "AfC",
+      "NPR"
+    ],
+    "ARandomName123": [
+      "AfC"
+    ],
+    "Arashdeep": [
+      "AfC"
+    ],
+    "ArcAngel": [
+      "AfC"
+    ],
+    "Arghya Roy": [
+      "AfC"
+    ],
+    "ArielGold": [
+      "AfC"
+    ],
+    "AristocrSirr22": [
+      "NPR"
+    ],
+    "Arrascaeta22": [
+      "AfC"
+    ],
+    "Arteyu": [
+      "AfC"
+    ],
+    "Arthistorian1977": [
+      "NPR"
+    ],
+    "ArthurTheGardener": [
+      "NPR"
+    ],
+    "Asilvering": [
+      "AfC"
+    ],
+    "Asoundd": [
+      "NPR"
+    ],
+    "Astra Travasso": [
+      "AfC"
+    ],
+    "AstrooKai": [
+      "AfC",
+      "NPR"
+    ],
+    "Astrophobe": [
+      "NPR"
+    ],
+    "Aszx5000": [
+      "NPR"
+    ],
+    "Atlantic306": [
+      "AfC",
+      "NPR"
+    ],
+    "Atsme": [
+      "AfC",
+      "NPR"
+    ],
+    "AugusteBlanqui": [
+      "NPR"
+    ],
+    "Aunva6": [
+      "AfC",
+      "NPR"
+    ],
+    "AvalerionV": [
+      "AfC"
+    ],
+    "Averruncus": [
+      "AfC"
+    ],
+    "Avs5221": [
+      "AfC"
+    ],
+    "Awilley": [
+      "AfC"
+    ],
+    "Axolitl": [
+      "AfC",
+      "NPR"
+    ],
+    "Aydoh8": [
+      "NPR"
+    ],
+    "Aza24": [
+      "NPR"
+    ],
+    "Azndrumsticks": [
+      "AfC"
+    ],
+    "Azyrii": [
+      "NPR"
+    ],
+    "Babegriev": [
+      "NPR"
+    ],
+    "Balon Greyjoy": [
+      "NPR"
+    ],
+    "Balph Eubank": [
+      "NPR"
+    ],
+    "Barbara (WVS)": [
+      "NPR"
+    ],
+    "Barkeep49": [
+      "NPR"
+    ],
+    "Bastun": [
+      "NPR"
+    ],
+    "Bcschneider53": [
+      "NPR"
+    ],
+    "Bduke": [
+      "AfC"
+    ],
+    "BeanieFan11": [
+      "AfC",
+      "NPR"
+    ],
+    "Beardenr": [
+      "AfC"
+    ],
+    "Bearian": [
+      "NPR"
+    ],
+    "Behnam": [
+      "AfC"
+    ],
+    "Bellezzasolo": [
+      "NPR"
+    ],
+    "Belshay": [
+      "AfC"
+    ],
+    "Benison": [
+      "NPR"
+    ],
+    "BennyOnTheLoose": [
+      "NPR"
+    ],
+    "Bensci54": [
+      "NPR"
+    ],
+    "Berek": [
+      "NPR"
+    ],
+    "Beyond My Ken": [
+      "NPR"
+    ],
+    "Bgsu98": [
+      "NPR"
+    ],
+    "Bharathiya": [
+      "AfC"
+    ],
+    "BillHPike": [
+      "NPR"
+    ],
+    "Biochemistry&Love": [
+      "AfC"
+    ],
+    "Bishal Shrestha": [
+      "AfC"
+    ],
+    "Bishalbaishya2012": [
+      "AfC"
+    ],
+    "Bishalbaishya2012bot": [
+      "AfC"
+    ],
+    "Bishwa 777": [
+      "AfC"
+    ],
+    "Bklibcat67": [
+      "NPR"
+    ],
+    "Blackguard SF": [
+      "NPR"
+    ],
+    "Blaithnaid": [
+      "NPR"
+    ],
+    "Blethering Scot": [
+      "NPR"
+    ],
+    "Blue EagleUK": [
+      "AfC"
+    ],
+    "Bluerasberry": [
+      "NPR"
+    ],
+    "BlueTurtles": [
+      "NPR"
+    ],
+    "Blythwood": [
+      "NPR"
+    ],
+    "Bobby Cohn": [
+      "AfC"
+    ],
+    "Bogger": [
+      "NPR"
+    ],
+    "Boghog": [
+      "NPR"
+    ],
+    "BoLaINC": [
+      "AfC"
+    ],
+    "BookishReader": [
+      "NPR"
+    ],
+    "Botterweg": [
+      "NPR"
+    ],
+    "Boynamedsue": [
+      "NPR"
+    ],
+    "BoyTheKingCanDance": [
+      "NPR"
+    ],
+    "Bpuddin": [
+      "NPR"
+    ],
+    "Brandon.clark": [
+      "AfC"
+    ],
+    "Brandybradham": [
+      "AfC"
+    ],
+    "Bravelake": [
+      "AfC",
+      "NPR"
+    ],
+    "Breamk": [
+      "AfC"
+    ],
+    "BrechtBro": [
+      "NPR"
+    ],
+    "Bri": [
+      "NPR"
+    ],
+    "BriantTheatre": [
+      "AfC"
+    ],
+    "BrigadierG": [
+      "NPR"
+    ],
+    "Broc": [
+      "NPR"
+    ],
+    "Broccoli and Coffee": [
+      "NPR"
+    ],
+    "Brownray8309": [
+      "AfC"
+    ],
+    "Bruteforce7700": [
+      "AfC"
+    ],
+    "Bsherr": [
+      "NPR"
+    ],
+    "Buidhe": [
+      "NPR"
+    ],
+    "Bungle": [
+      "NPR"
+    ],
+    "Bunny997": [
+      "AfC"
+    ],
+    "Bunnypranav": [
+      "AfC",
+      "NPR"
+    ],
+    "Butlerblog": [
+      "NPR"
+    ],
+    "Buykaa12": [
+      "AfC"
+    ],
+    "C1K98V": [
+      "NPR"
+    ],
+    "Ca77st": [
+      "AfC"
+    ],
+    "CabinetCavers": [
+      "NPR"
+    ],
+    "Cabrils": [
+      "AfC",
+      "NPR"
+    ],
+    "Cahk": [
+      "NPR"
+    ],
+    "Caleb Stanford": [
+      "AfC"
+    ],
+    "Caliburn": [
+      "NPR"
+    ],
+    "Callanecc (alt)": [
+      "NPR"
+    ],
+    "Callmemirela": [
+      "NPR"
+    ],
+    "Calmer Waters": [
+      "AfC"
+    ],
+    "Canon the c00l": [
+      "AfC"
+    ],
+    "Caorongjin": [
+      "NPR"
+    ],
+    "CapitalSasha": [
+      "NPR"
+    ],
+    "CAPTAIN RAJU": [
+      "NPR"
+    ],
+    "Captain sparrow199": [
+      "AfC"
+    ],
+    "Carlminez": [
+      "AfC"
+    ],
+    "CaroleHenson": [
+      "NPR"
+    ],
+    "Carrite": [
+      "NPR"
+    ],
+    "Carwil": [
+      "NPR"
+    ],
+    "Casablanca Rock": [
+      "NPR"
+    ],
+    "Cassiopeia": [
+      "AfC",
+      "NPR"
+    ],
+    "Celestina007": [
+      "AfC"
+    ],
+    "Celia Homeford": [
+      "NPR"
+    ],
+    "CF-501 Falcon": [
+      "AfC"
+    ],
+    "CFA": [
+      "NPR"
+    ],
+    "Champion": [
+      "NPR"
+    ],
+    "Chao Garden": [
+      "NPR"
+    ],
+    "Charsaddian": [
+      "NPR"
+    ],
+    "Chennai Passangai": [
+      "AfC"
+    ],
+    "CherryPie94": [
+      "NPR"
+    ],
+    "Chetsford": [
+      "AfC"
+    ],
+    "Chiswick Chap": [
+      "NPR"
+    ],
+    "Chlod": [
+      "NPR"
+    ],
+    "ChloeDrowssap": [
+      "NPR"
+    ],
+    "Chocmilk03": [
+      "NPR"
+    ],
+    "Chorchapu": [
+      "NPR"
+    ],
+    "Choucas": [
+      "NPR"
+    ],
+    "Christian75": [
+      "NPR"
+    ],
+    "ChrysGalley": [
+      "AfC"
+    ],
+    "CHURCHIL JERIN": [
+      "AfC"
+    ],
+    "Cielquiparle": [
+      "NPR"
+    ],
+    "Citing": [
+      "NPR"
+    ],
+    "Citobun": [
+      "NPR"
+    ],
+    "Citrivescence": [
+      "NPR"
+    ],
+    "Ckfasdf": [
+      "NPR"
+    ],
+    "Cl3phact0": [
+      "AfC",
+      "NPR"
+    ],
+    "Clarityfiend": [
+      "NPR"
+    ],
+    "Clark Harris": [
+      "AfC"
+    ],
+    "Classicwiki": [
+      "NPR"
+    ],
+    "ClaudineChionh": [
+      "NPR"
+    ],
+    "Clog Wolf": [
+      "NPR"
+    ],
+    "Cloventt": [
+      "NPR"
+    ],
+    "CNMall41": [
+      "AfC",
+      "NPR"
+    ],
+    "Coatshut80": [
+      "AfC"
+    ],
+    "CoconutOctopus": [
+      "AfC"
+    ],
+    "CodeLyoko": [
+      "AfC"
+    ],
+    "Coderzombie": [
+      "NPR"
+    ],
+    "ColinFine": [
+      "NPR"
+    ],
+    "ColinSchm": [
+      "NPR"
+    ],
+    "CommunityNotesContributor": [
+      "AfC",
+      "NPR"
+    ],
+    "Compassionate727": [
+      "NPR"
+    ],
+    "Connorkeough": [
+      "AfC"
+    ],
+    "Coolgurl5555": [
+      "AfC"
+    ],
+    "Corkythehornetfan": [
+      "NPR"
+    ],
+    "Cosmic840": [
+      "AfC"
+    ],
+    "Counterpart0": [
+      "AfC"
+    ],
+    "Cowboygilbert": [
+      "NPR"
+    ],
+    "Cowhen1966": [
+      "AfC"
+    ],
+    "Cpt Jack House": [
+      "AfC"
+    ],
+    "Cptabhiimanyuseven": [
+      "NPR"
+    ],
+    "CptViraj": [
+      "NPR"
+    ],
+    "Cremastra": [
+      "NPR"
+    ],
+    "Crestfalling": [
+      "NPR"
+    ],
+    "Crunchydillpickle": [
+      "AfC"
+    ],
+    "Crystallizedcarbon": [
+      "NPR"
+    ],
+    "CSMention269": [
+      "AfC",
+      "NPR"
+    ],
+    "Cubs197": [
+      "AfC"
+    ],
+    "Cukie Gherkin": [
+      "NPR"
+    ],
+    "Curb Safe Charmer": [
+      "AfC",
+      "NPR"
+    ],
+    "Curbon7": [
+      "AfC"
+    ],
+    "Curtaintoad": [
+      "AfC"
+    ],
+    "Cutlass": [
+      "NPR"
+    ],
+    "Cyberdog958": [
+      "NPR"
+    ],
+    "CycloneYoris": [
+      "NPR"
+    ],
+    "Czarking0": [
+      "NPR"
+    ],
+    "D.18th": [
+      "AfC"
+    ],
+    "Daask": [
+      "NPR"
+    ],
+    "Dafootballguy": [
+      "NPR"
+    ],
+    "Dafootballguy SOCK": [
+      "NPR"
+    ],
+    "Dajasj": [
+      "NPR"
+    ],
+    "Dalisays": [
+      "AfC"
+    ],
+    "Dan arndt": [
+      "AfC",
+      "NPR"
+    ],
+    "Dan Koehl": [
+      "NPR"
+    ],
+    "Dan Leonard": [
+      "NPR"
+    ],
+    "Dancingturtle8205": [
+      "AfC"
+    ],
+    "Dane": [
+      "NPR"
+    ],
+    "DaniloDaysOfOurLives": [
+      "NPR"
+    ],
+    "Danish.mehraj26": [
+      "AfC"
+    ],
+    "DannyS712": [
+      "AfC"
+    ],
+    "Darkwarriorblake": [
+      "NPR"
+    ],
+    "Darkwind": [
+      "AfC"
+    ],
+    "David FLXD": [
+      "AfC"
+    ],
+    "David.moreno72": [
+      "NPR"
+    ],
+    "Dawkin Verbier": [
+      "NPR"
+    ],
+    "Dawnseeker2000": [
+      "NPR"
+    ],
+    "DBD": [
+      "NPR"
+    ],
+    "Dclemens1971": [
+      "AfC"
+    ],
+    "Deadbeef": [
+      "AfC"
+    ],
+    "Decoderz": [
+      "AfC"
+    ],
+    "DeFaultRyan": [
+      "AfC"
+    ],
+    "Dege31": [
+      "AfC"
+    ],
+    "Delldot": [
+      "AfC"
+    ],
+    "Delta fiver": [
+      "AfC"
+    ],
+    "Demt1298": [
+      "AfC",
+      "NPR"
+    ],
+    "Destinyokhiria": [
+      "AfC",
+      "NPR"
+    ],
+    "Devonian Wombat": [
+      "AfC",
+      "NPR"
+    ],
+    "Devopam": [
+      "AfC"
+    ],
+    "Dewritech": [
+      "NPR"
+    ],
+    "DGaw": [
+      "NPR"
+    ],
+    "Dh.wp": [
+      "AfC"
+    ],
+    "Dial911": [
+      "AfC"
+    ],
+    "Dieter Lloyd Wexler": [
+      "AfC",
+      "NPR"
+    ],
+    "Dinahdaniriyansyah": [
+      "AfC"
+    ],
+    "Dionysodorus": [
+      "NPR"
+    ],
+    "Diptanshu Das": [
+      "AfC"
+    ],
+    "DiscoursesonLivvy": [
+      "AfC"
+    ],
+    "Dl2000": [
+      "NPR"
+    ],
+    "DMC511": [
+      "NPR"
+    ],
+    "DocFreeman24": [
+      "NPR"
+    ],
+    "DoctorJoeE": [
+      "NPR"
+    ],
+    "Dodger67": [
+      "AfC"
+    ],
+    "Dog Oxide": [
+      "NPR"
+    ],
+    "DogsBreakfast87": [
+      "NPR"
+    ],
+    "Domdeparis": [
+      "AfC"
+    ],
+    "Doncram": [
+      "AfC"
+    ],
+    "Donner60": [
+      "NPR"
+    ],
+    "Dora the Axe-plorer": [
+      "NPR"
+    ],
+    "Doric Loon": [
+      "AfC"
+    ],
+    "DoubleGrazing": [
+      "AfC"
+    ],
+    "DownTownRich": [
+      "AfC"
+    ],
+    "Dps04": [
+      "NPR"
+    ],
+    "Dr meetsingh": [
+      "AfC"
+    ],
+    "Dr vulpes": [
+      "AfC"
+    ],
+    "Dr. Kadzi": [
+      "AfC"
+    ],
+    "Dream out loud": [
+      "NPR"
+    ],
+    "DreamRimmer bot": [
+      "NPR"
+    ],
+    "Dreamyshade": [
+      "AfC",
+      "NPR"
+    ],
+    "Drkay": [
+      "NPR"
+    ],
+    "DrThneed": [
+      "NPR"
+    ],
+    "Duanedonecker": [
+      "AfC"
+    ],
+    "Dusti": [
+      "AfC"
+    ],
+    "DVdm": [
+      "NPR"
+    ],
+    "Dwergenpaartje": [
+      "NPR"
+    ],
+    "Dxneo": [
+      "NPR"
+    ],
+    "Eagleash": [
+      "AfC"
+    ],
+    "EaglesFan37": [
+      "NPR"
+    ],
+    "Eamondevalera2": [
+      "AfC"
+    ],
+    "Earth605": [
+      "AfC"
+    ],
+    "EarthDude": [
+      "NPR"
+    ],
+    "Earthh": [
+      "NPR"
+    ],
+    "EatingCarBatteries": [
+      "NPR"
+    ],
+    "EchetusXe": [
+      "NPR"
+    ],
+    "EchidnaLives": [
+      "AfC",
+      "NPR"
+    ],
+    "Ecourter": [
+      "NPR"
+    ],
+    "Ednabrenze": [
+      "NPR"
+    ],
+    "Edward056686": [
+      "NPR"
+    ],
+    "Edwardx": [
+      "NPR"
+    ],
+    "Eejit43": [
+      "AfC",
+      "NPR"
+    ],
+    "EEng": [
+      "NPR"
+    ],
+    "EggRoll97": [
+      "NPR"
+    ],
+    "El cid, el campeador": [
+      "NPR"
+    ],
+    "El Kharisma Kasilembo": [
+      "AfC"
+    ],
+    "ElevenHour": [
+      "AfC"
+    ],
+    "Elmidae": [
+      "NPR"
+    ],
+    "Em-mustapha": [
+      "AfC"
+    ],
+    "EmeraldRange": [
+      "NPR"
+    ],
+    "Emir of Wikipedia": [
+      "NPR"
+    ],
+    "Empire3131": [
+      "AfC"
+    ],
+    "Encoded": [
+      "AfC"
+    ],
+    "Endrabcwizart": [
+      "AfC",
+      "NPR"
+    ],
+    "Enos733": [
+      "NPR"
+    ],
+    "Enwebb": [
+      "NPR"
+    ],
+    "EoRdE6": [
+      "NPR"
+    ],
+    "Epluribusunumyall": [
+      "AfC"
+    ],
+    "Eruditescholar": [
+      "AfC"
+    ],
+    "Estar8806": [
+      "NPR"
+    ],
+    "Etakc": [
+      "AfC"
+    ],
+    "Ethmostigmus": [
+      "NPR"
+    ],
+    "Etothepi": [
+      "NPR"
+    ],
+    "Etzedek24": [
+      "NPR"
+    ],
+    "Eucalyptusmint": [
+      "NPR"
+    ],
+    "EuroCarGT": [
+      "AfC"
+    ],
+    "Ewhite31": [
+      "NPR"
+    ],
+    "Excirial": [
+      "AfC"
+    ],
+    "Eyesnore": [
+      "NPR"
+    ],
+    "F5pillar": [
+      "AfC"
+    ],
+    "Fade258": [
+      "AfC",
+      "NPR"
+    ],
+    "Fagles": [
+      "AfC"
+    ],
+    "Faizanalivarya": [
+      "AfC"
+    ],
+    "Falcon Kirtaran": [
+      "NPR"
+    ],
+    "FallingGravity": [
+      "NPR"
+    ],
+    "Famousdog": [
+      "NPR"
+    ],
+    "Fancy Refrigerator": [
+      "NPR"
+    ],
+    "Farmer Brown": [
+      "NPR"
+    ],
+    "FataLio": [
+      "AfC"
+    ],
+    "Fbdave": [
+      "NPR"
+    ],
+    "Feedintm": [
+      "AfC"
+    ],
+    "Feminist": [
+      "NPR"
+    ],
+    "Festucalex": [
+      "AfC",
+      "NPR"
+    ],
+    "Fiachra10003": [
+      "NPR"
+    ],
+    "FiddleheadLady": [
+      "NPR"
+    ],
+    "Filmssssssssssss": [
+      "NPR"
+    ],
+    "Fingerz": [
+      "AfC"
+    ],
+    "Finnfrog99": [
+      "AfC"
+    ],
+    "Finngall": [
+      "NPR"
+    ],
+    "Firefangledfeathers": [
+      "NPR"
+    ],
+    "FlammablePizza": [
+      "AfC"
+    ],
+    "FlightTime": [
+      "NPR"
+    ],
+    "Flixtey": [
+      "AfC"
+    ],
+    "Florentyna": [
+      "NPR"
+    ],
+    "Florificapis": [
+      "NPR"
+    ],
+    "Fnlayson": [
+      "NPR"
+    ],
+    "FormalDude": [
+      "AfC",
+      "NPR"
+    ],
+    "Fortek67": [
+      "AfC",
+      "NPR"
+    ],
+    "Fortuna imperatrix mundi": [
+      "NPR"
+    ],
+    "Fram": [
+      "NPR"
+    ],
+    "Francisco288": [
+      "AfC"
+    ],
+    "Fred Gandt": [
+      "NPR"
+    ],
+    "Friend.hey": [
+      "AfC"
+    ],
+    "Frost": [
+      "NPR"
+    ],
+    "FULBERT": [
+      "NPR"
+    ],
+    "Fumitol": [
+      "AfC"
+    ],
+    "Funnyfarmofdoom": [
+      "NPR"
+    ],
+    "FuzzyMagma": [
+      "NPR"
+    ],
+    "Gab4gab": [
+      "NPR"
+    ],
+    "Galatz": [
+      "NPR"
+    ],
+    "GalStar": [
+      "AfC"
+    ],
+    "Garchy": [
+      "NPR"
+    ],
+    "Garsh2": [
+      "AfC",
+      "NPR"
+    ],
+    "Garudindflamewing": [
+      "NPR"
+    ],
+    "Gatemansgc": [
+      "NPR"
+    ],
+    "Gazal world": [
+      "NPR"
+    ],
+    "Gbawden": [
+      "AfC",
+      "NPR"
+    ],
+    "Gderrin": [
+      "NPR"
+    ],
+    "Geardona": [
+      "NPR"
+    ],
+    "Geeebozz": [
+      "AfC"
+    ],
+    "GELongstreet": [
+      "NPR"
+    ],
+    "Gend27": [
+      "AfC"
+    ],
+    "Gene93k": [
+      "AfC",
+      "NPR"
+    ],
+    "Generalissima": [
+      "NPR"
+    ],
+    "GeneralPoxter": [
+      "NPR"
+    ],
+    "Germsteel": [
+      "AfC"
+    ],
+    "Gfoley4": [
+      "AfC"
+    ],
+    "GGOTCC": [
+      "AfC",
+      "NPR"
+    ],
+    "Gheus": [
+      "AfC",
+      "NPR"
+    ],
+    "Giants27": [
+      "AfC"
+    ],
+    "Gif-unrelated": [
+      "AfC"
+    ],
+    "Giovanosky616": [
+      "AfC"
+    ],
+    "Giuliotf": [
+      "NPR"
+    ],
+    "Glane23": [
+      "NPR"
+    ],
+    "GloryRoad66": [
+      "NPR"
+    ],
+    "Godsy": [
+      "NPR"
+    ],
+    "GoldMiner24": [
+      "NPR"
+    ],
+    "GoldRomean": [
+      "NPR"
+    ],
+    "Gommeh": [
+      "NPR"
+    ],
+    "GordiasAchos": [
+      "AfC"
+    ],
+    "Govvy": [
+      "NPR"
+    ],
+    "GrabUp": [
+      "NPR"
+    ],
+    "Graeme Bartlett": [
+      "AfC"
+    ],
+    "Grahaml35": [
+      "AfC",
+      "NPR"
+    ],
+    "Gramalow": [
+      "AfC"
+    ],
+    "Grapesurgeon": [
+      "NPR"
+    ],
+    "GraziePrego": [
+      "AfC",
+      "NPR"
+    ],
+    "GreatForgottenOne": [
+      "AfC"
+    ],
+    "GreenC": [
+      "AfC"
+    ],
+    "GreenMeansGo": [
+      "NPR"
+    ],
+    "GregariousMadness": [
+      "NPR"
+    ],
+    "Grey Wanderer": [
+      "NPR"
+    ],
+    "GRuban": [
+      "NPR"
+    ],
+    "Grumpylawnchair": [
+      "AfC"
+    ],
+    "GSS": [
+      "NPR"
+    ],
+    "GTrang": [
+      "AfC",
+      "NPR"
+    ],
+    "Guessitsavis": [
+      "NPR"
+    ],
+    "Gulshanvikas": [
+      "AfC"
+    ],
+    "Gurkubondinn": [
+      "NPR"
+    ],
+    "Gusfriend": [
+      "AfC"
+    ],
+    "Guy Macon": [
+      "NPR"
+    ],
+    "Habst": [
+      "NPR"
+    ],
+    "Haggis MacHaggis": [
+      "NPR"
+    ],
+    "Hako9": [
+      "NPR"
+    ],
+    "Hal9000w": [
+      "AfC"
+    ],
+    "Haleemaumer": [
+      "AfC"
+    ],
+    "Hameltion": [
+      "NPR"
+    ],
+    "Hanif86": [
+      "AfC"
+    ],
+    "Happily888": [
+      "AfC"
+    ],
+    "Happysailor": [
+      "AfC"
+    ],
+    "Happyshotboii10": [
+      "AfC"
+    ],
+    "Harrz": [
+      "NPR"
+    ],
+    "Harvarder2012": [
+      "AfC"
+    ],
+    "Hawkeye7": [
+      "NPR"
+    ],
+    "Hayman30": [
+      "NPR"
+    ],
+    "Headbomb": [
+      "NPR"
+    ],
+    "HeinzMaster": [
+      "AfC",
+      "NPR"
+    ],
+    "Helpful Raccoon": [
+      "NPR"
+    ],
+    "Heptanitrocubane": [
+      "AfC"
+    ],
+    "Hermera34": [
+      "AfC"
+    ],
+    "Herostratus": [
+      "NPR"
+    ],
+    "Hersfold": [
+      "AfC"
+    ],
+    "Hewhoamareismyself": [
+      "AfC"
+    ],
+    "Hey man im josh": [
+      "AfC"
+    ],
+    "HighKing": [
+      "NPR"
+    ],
+    "HilssaMansen19": [
+      "AfC"
+    ],
+    "Hilst": [
+      "NPR"
+    ],
+    "HitroMilanese": [
+      "NPR"
+    ],
+    "Hiwilms": [
+      "NPR"
+    ],
+    "Hmlarson": [
+      "NPR"
+    ],
+    "Hobit": [
+      "NPR"
+    ],
+    "Home Lander": [
+      "NPR"
+    ],
+    "HouseOfChange": [
+      "NPR"
+    ],
+    "Hovden": [
+      "AfC"
+    ],
+    "Howicus": [
+      "NPR"
+    ],
+    "Htanaungg": [
+      "NPR"
+    ],
+    "Hughesdarren": [
+      "NPR"
+    ],
+    "HundredVisionsAndRevisions": [
+      "AfC"
+    ],
+    "Hunterm267": [
+      "AfC"
+    ],
+    "Hurricane Wind and Fire": [
+      "NPR"
+    ],
+    "HurricaneZeta": [
+      "NPR"
+    ],
+    "Hustle77": [
+      "AfC"
+    ],
+    "HwyNerd Mike": [
+      "AfC"
+    ],
+    "Hydronium Hydroxide": [
+      "NPR"
+    ],
+    "Hyperai.in": [
+      "AfC"
+    ],
+    "Hzh": [
+      "NPR"
+    ],
+    "I am bad at usernames": [
+      "NPR"
+    ],
+    "I2Overcome": [
+      "NPR"
+    ],
+    "IagoQnsi": [
+      "NPR"
+    ],
+    "IAmChaos": [
+      "AfC",
+      "NPR"
+    ],
+    "Iamheentity": [
+      "AfC"
+    ],
+    "Iazyges": [
+      "NPR"
+    ],
+    "Ibjaja055": [
+      "AfC",
+      "NPR"
+    ],
+    "ICantSeeTheOtherSide": [
+      "AfC"
+    ],
+    "IceBergYYC": [
+      "NPR"
+    ],
+    "Icem4k": [
+      "NPR"
+    ],
+    "Icepinner": [
+      "AfC"
+    ],
+    "IceWelder": [
+      "NPR"
+    ],
+    "Idoghor Melody": [
+      "AfC",
+      "NPR"
+    ],
+    "Iffy": [
+      "AfC"
+    ],
+    "IgelRM": [
+      "AfC",
+      "NPR"
+    ],
+    "Illegitimate Barrister": [
+      "NPR"
+    ],
+    "Illusion Flame": [
+      "NPR"
+    ],
+    "IMS91319": [
+      "AfC"
+    ],
+    "Imzadi1979": [
+      "NPR"
+    ],
+    "In ictu oculi": [
+      "NPR"
+    ],
+    "In veritas": [
+      "AfC"
+    ],
+    "IndyNotes": [
+      "NPR"
+    ],
+    "Inexpiable": [
+      "NPR"
+    ],
+    "InfiniteNexus": [
+      "NPR"
+    ],
+    "Infokesh": [
+      "AfC"
+    ],
+    "Ingratis": [
+      "AfC",
+      "NPR"
+    ],
+    "Innisfree987": [
+      "NPR"
+    ],
+    "Insertcleverphrasehere": [
+      "NPR"
+    ],
+    "IntentionallyDense": [
+      "AfC",
+      "NPR"
+    ],
+    "InterstellarGamer12321": [
+      "AfC",
+      "NPR"
+    ],
+    "Interstellarity": [
+      "NPR"
+    ],
+    "Intgr": [
+      "NPR"
+    ],
+    "IntoThinAir": [
+      "NPR"
+    ],
+    "Ipigott": [
+      "NPR"
+    ],
+    "Iridescent 2": [
+      "NPR"
+    ],
+    "Iseult": [
+      "NPR"
+    ],
+    "Isochrone": [
+      "NPR"
+    ],
+    "Itsmeitsrotar": [
+      "AfC"
+    ],
+    "Itsyoungrapper": [
+      "NPR"
+    ],
+    "Itzcuauhtli11": [
+      "AfC"
+    ],
+    "IVORK": [
+      "AfC"
+    ],
+    "Iztwoz": [
+      "NPR"
+    ],
+    "J947": [
+      "NPR"
+    ],
+    "Jack Frost": [
+      "NPR"
+    ],
+    "Jack1956": [
+      "NPR"
+    ],
+    "JackFromWisconsin": [
+      "NPR"
+    ],
+    "JackofOz": [
+      "NPR"
+    ],
+    "JacobTheRox": [
+      "AfC"
+    ],
+    "Jacona": [
+      "NPR"
+    ],
+    "Jahibadkaret": [
+      "AfC"
+    ],
+    "Jalal831": [
+      "AfC"
+    ],
+    "James Allison": [
+      "NPR"
+    ],
+    "JamesG5": [
+      "NPR"
+    ],
+    "Jampilot": [
+      "AfC"
+    ],
+    "Janmohammad": [
+      "AfC"
+    ],
+    "Janweh64": [
+      "AfC"
+    ],
+    "Jarkeld": [
+      "AfC"
+    ],
+    "JavaHurricane": [
+      "AfC",
+      "NPR"
+    ],
+    "Javert2113": [
+      "NPR"
+    ],
+    "Javideh": [
+      "AfC"
+    ],
+    "Jax 0677": [
+      "NPR"
+    ],
+    "JayBeeEll": [
+      "NPR"
+    ],
+    "JBchrch": [
+      "NPR"
+    ],
+    "Jbhunley": [
+      "AfC"
+    ],
+    "JC7V7DC5768": [
+      "AfC"
+    ],
+    "Jcl6543": [
+      "AfC"
+    ],
+    "Jdcomix": [
+      "NPR"
+    ],
+    "JDDJS": [
+      "NPR"
+    ],
+    "JeBonSer": [
+      "AfC",
+      "NPR"
+    ],
+    "Jeff G.": [
+      "AfC",
+      "NPR"
+    ],
+    "Jeffrey R. Clark": [
+      "NPR"
+    ],
+    "Jeraphine": [
+      "AfC"
+    ],
+    "Jeraxmoira": [
+      "NPR"
+    ],
+    "Jeromeenriquez": [
+      "AfC"
+    ],
+    "Jessamyn": [
+      "AfC",
+      "NPR"
+    ],
+    "Jesswade88": [
+      "NPR"
+    ],
+    "Jetstreamer": [
+      "NPR"
+    ],
+    "JFG": [
+      "NPR"
+    ],
+    "JFHJr": [
+      "NPR"
+    ],
+    "Jianhui67": [
+      "NPR"
+    ],
+    "Jinerea": [
+      "NPR"
+    ],
+    "Jingiby": [
+      "NPR"
+    ],
+    "Jishara": [
+      "NPR"
+    ],
+    "Jiten D": [
+      "NPR"
+    ],
+    "JJPMaster": [
+      "AfC",
+      "NPR"
+    ],
+    "Jlwoodwa": [
+      "AfC"
+    ],
+    "Jmajeremy": [
+      "AfC"
+    ],
+    "Jmcgnh": [
+      "NPR"
+    ],
+    "Jmertel23": [
+      "NPR"
+    ],
+    "JMHamo": [
+      "NPR"
+    ],
+    "JocularJellyfish": [
+      "NPR"
+    ],
+    "Joe Roe (mobile)": [
+      "NPR"
+    ],
+    "Joel Kirk": [
+      "AfC"
+    ],
+    "Johannes Maximilian": [
+      "NPR"
+    ],
+    "Johansonburg": [
+      "AfC"
+    ],
+    "John B123": [
+      "NPR"
+    ],
+    "John Broughton": [
+      "NPR"
+    ],
+    "John Cline": [
+      "NPR"
+    ],
+    "John George III": [
+      "AfC"
+    ],
+    "JohnLaurens333": [
+      "AfC"
+    ],
+    "JohnMizuki": [
+      "NPR"
+    ],
+    "Johnnie Bob": [
+      "AfC"
+    ],
+    "Johnsmith2116": [
+      "NPR"
+    ],
+    "Johnson524": [
+      "NPR"
+    ],
+    "Jolielover": [
+      "NPR"
+    ],
+    "Jon Kolbert": [
+      "NPR"
+    ],
+    "Jon698": [
+      "NPR"
+    ],
+    "Jonathan Deamer": [
+      "NPR"
+    ],
+    "Jor.langneh": [
+      "AfC"
+    ],
+    "JordanKyser22": [
+      "AfC"
+    ],
+    "Jorm": [
+      "NPR"
+    ],
+    "Joseywales1961": [
+      "NPR"
+    ],
+    "Josve05a": [
+      "NPR"
+    ],
+    "Jr8825": [
+      "NPR"
+    ],
+    "JSFarman": [
+      "AfC",
+      "NPR"
+    ],
+    "JTtheOG": [
+      "NPR"
+    ],
+    "Juhachi": [
+      "NPR"
+    ],
+    "Julietdeltalima": [
+      "NPR"
+    ],
+    "Junbeesh": [
+      "NPR"
+    ],
+    "JuniperChill": [
+      "AfC"
+    ],
+    "Junkman99": [
+      "AfC"
+    ],
+    "Jupitus Smart": [
+      "NPR"
+    ],
+    "Juristicweb": [
+      "AfC"
+    ],
+    "Justanothersgwikieditor": [
+      "NPR"
+    ],
+    "JustARandomEditor123": [
+      "NPR"
+    ],
+    "JustARandomSquid": [
+      "AfC"
+    ],
+    "Justiyaya": [
+      "AfC",
+      "NPR"
+    ],
+    "Juxlos": [
+      "NPR"
+    ],
+    "Jweiss11": [
+      "NPR"
+    ],
+    "Jwslubbock": [
+      "NPR"
+    ],
+    "JzG": [
+      "NPR"
+    ],
+    "K.e.coffman": [
+      "NPR"
+    ],
+    "KathrynLybarger": [
+      "NPR"
+    ],
+    "Kavyansh.Singh": [
+      "NPR"
+    ],
+    "Kazamzam": [
+      "NPR"
+    ],
+    "Kb.au": [
+      "NPR"
+    ],
+    "Kenb215": [
+      "AfC"
+    ],
+    "Kencf0618": [
+      "NPR"
+    ],
+    "Kevjr97": [
+      "AfC"
+    ],
+    "KGirlTrucker81": [
+      "AfC",
+      "NPR"
+    ],
+    "Khagendrawiki": [
+      "AfC"
+    ],
+    "KHarlan (WMF)": [
+      "NPR"
+    ],
+    "Khinkali": [
+      "AfC"
+    ],
+    "Khizer91": [
+      "AfC"
+    ],
+    "Kholo Motseki": [
+      "AfC"
+    ],
+    "Kikichugirl": [
+      "AfC"
+    ],
+    "Killarnee": [
+      "NPR"
+    ],
+    "Killer Moff": [
+      "NPR"
+    ],
+    "KINGHB190": [
+      "AfC"
+    ],
+    "Kingsif": [
+      "NPR"
+    ],
+    "KingSkyLord": [
+      "NPR"
+    ],
+    "Kingsmasher678": [
+      "NPR"
+    ],
+    "Kittycolada911": [
+      "AfC"
+    ],
+    "Kivi36": [
+      "AfC"
+    ],
+    "Kiwiz1338": [
+      "NPR"
+    ],
+    "KJP1": [
+      "NPR"
+    ],
+    "Klbrain": [
+      "NPR"
+    ],
+    "Kline": [
+      "NPR"
+    ],
+    "Kovcszaln6": [
+      "AfC"
+    ],
+    "Kqol": [
+      "NPR"
+    ],
+    "Kraftlos": [
+      "AfC"
+    ],
+    "Krashlandon": [
+      "AfC"
+    ],
+    "Ks0alt": [
+      "NPR"
+    ],
+    "KTC": [
+      "AfC"
+    ],
+    "Ktkvtsh": [
+      "AfC",
+      "NPR"
+    ],
+    "Kudpung": [
+      "NPR"
+    ],
+    "Kvinnen": [
+      "NPR"
+    ],
+    "Kvng": [
+      "AfC",
+      "NPR"
+    ],
+    "KyleSirTalksAlot": [
+      "NPR"
+    ],
+    "KylieTastic": [
+      "AfC"
+    ],
+    "L3X1": [
+      "NPR"
+    ],
+    "Lakun.patra": [
+      "AfC"
+    ],
+    "Largoplazo": [
+      "NPR"
+    ],
+    "Laterthanyouthink": [
+      "NPR"
+    ],
+    "Laura240406": [
+      "AfC"
+    ],
+    "Ldm1954": [
+      "NPR"
+    ],
+    "Lectonar": [
+      "NPR"
+    ],
+    "Lee Vilenski": [
+      "AfC"
+    ],
+    "Lefcentreright": [
+      "NPR"
+    ],
+    "Leggomygreggo8": [
+      "NPR"
+    ],
+    "Lekkala R Reddy": [
+      "AfC"
+    ],
+    "LeoFrank": [
+      "NPR"
+    ],
+    "LEvalyn": [
+      "AfC"
+    ],
+    "Lewolka": [
+      "AfC"
+    ],
+    "Lhili": [
+      "AfC"
+    ],
+    "Liam987": [
+      "AfC"
+    ],
+    "Liance": [
+      "NPR"
+    ],
+    "Libby norman": [
+      "AfC"
+    ],
+    "Lightoil": [
+      "AfC",
+      "NPR"
+    ],
+    "Lijil": [
+      "NPR"
+    ],
+    "LindsayH": [
+      "NPR"
+    ],
+    "Lithopsian": [
+      "NPR"
+    ],
+    "LittlePuppers": [
+      "NPR"
+    ],
+    "LJF2019": [
+      "AfC",
+      "NPR"
+    ],
+    "Lklundin": [
+      "NPR"
+    ],
+    "LM103": [
+      "AfC"
+    ],
+    "LM2000": [
+      "NPR"
+    ],
+    "Logical Premise": [
+      "AfC"
+    ],
+    "Lonehexagon": [
+      "AfC"
+    ],
+    "Lopifalko": [
+      "NPR"
+    ],
+    "Lordseriouspig": [
+      "NPR"
+    ],
+    "Lorelei": [
+      "AfC"
+    ],
+    "Loriendrew": [
+      "NPR"
+    ],
+    "Lovkal": [
+      "NPR"
+    ],
+    "Loytra": [
+      "NPR"
+    ],
+    "Lp0 on fire": [
+      "NPR"
+    ],
+    "LPHaddleburg": [
+      "NPR"
+    ],
+    "LR.127": [
+      "AfC"
+    ],
+    "LtiloxA": [
+      "AfC",
+      "NPR"
+    ],
+    "LukeSurl": [
+      "NPR"
+    ],
+    "LunaEclipse": [
+      "NPR"
+    ],
+    "LuniZunie": [
+      "AfC",
+      "NPR"
+    ],
+    "Lynch44": [
+      "NPR"
+    ],
+    "M4V3R1CK32": [
+      "AfC"
+    ],
+    "Macaddct1984": [
+      "NPR"
+    ],
+    "Macboots": [
+      "AfC"
+    ],
+    "Mach61": [
+      "AfC",
+      "NPR"
+    ],
+    "MadelynnSienna": [
+      "AfC",
+      "NPR"
+    ],
+    "Maelwys": [
+      "AfC"
+    ],
+    "Mahensingha": [
+      "AfC"
+    ],
+    "Mahesh Basude": [
+      "AfC"
+    ],
+    "MainlyTwelve": [
+      "NPR"
+    ],
+    "Majash2020": [
+      "AfC"
+    ],
+    "Makecat": [
+      "AfC"
+    ],
+    "MangoMan11": [
+      "AfC"
+    ],
+    "Mangroves": [
+      "NPR"
+    ],
+    "Mann Mann": [
+      "NPR"
+    ],
+    "MarcGarver": [
+      "NPR"
+    ],
+    "MargaretRDonald": [
+      "NPR"
+    ],
+    "Mariamnei": [
+      "NPR"
+    ],
+    "Markdask": [
+      "NPR"
+    ],
+    "Marshelec": [
+      "AfC"
+    ],
+    "Marvelkol365": [
+      "AfC"
+    ],
+    "Masohpotato": [
+      "NPR"
+    ],
+    "Masssly": [
+      "AfC"
+    ],
+    "Mattdaviesfsic": [
+      "AfC",
+      "NPR"
+    ],
+    "Matthew hk": [
+      "NPR"
+    ],
+    "Matthewrb": [
+      "NPR"
+    ],
+    "MatthewVanitas": [
+      "AfC"
+    ],
+    "Matticusmadness": [
+      "AfC"
+    ],
+    "Max": [
+      "NPR"
+    ],
+    "Maximilian775": [
+      "NPR"
+    ],
+    "MaxnaCarta": [
+      "NPR"
+    ],
+    "MaynardClark": [
+      "AfC"
+    ],
+    "Mcampany": [
+      "NPR"
+    ],
+    "Mccapra": [
+      "NPR"
+    ],
+    "Mccunicano": [
+      "NPR"
+    ],
+    "Mcmatter": [
+      "NPR"
+    ],
+    "MD. Nafis Bhuiyan": [
+      "AfC"
+    ],
+    "Mdaniels5757": [
+      "NPR"
+    ],
+    "Mdann52": [
+      "AfC",
+      "NPR"
+    ],
+    "MDEire": [
+      "NPR"
+    ],
+    "Mdewman6": [
+      "NPR"
+    ],
+    "Mdriscoll03": [
+      "AfC"
+    ],
+    "Mean as custard": [
+      "NPR"
+    ],
+    "MediaKyle": [
+      "NPR"
+    ],
+    "Meena": [
+      "NPR"
+    ],
+    "Mekomo": [
+      "NPR"
+    ],
+    "Melcous": [
+      "NPR"
+    ],
+    "Memer15151": [
+      "NPR"
+    ],
+    "MesutOzula": [
+      "AfC"
+    ],
+    "Meters": [
+      "NPR"
+    ],
+    "Mgp28": [
+      "NPR"
+    ],
+    "MidnightMayhem": [
+      "AfC"
+    ],
+    "Mika1h": [
+      "NPR"
+    ],
+    "Mikeycdiamond": [
+      "AfC"
+    ],
+    "MikutoH": [
+      "NPR"
+    ],
+    "Millylove60": [
+      "AfC"
+    ],
+    "Milowent": [
+      "NPR"
+    ],
+    "Miminity": [
+      "AfC",
+      "NPR"
+    ],
+    "Minnastronomer": [
+      "NPR"
+    ],
+    "Missionedit": [
+      "AfC"
+    ],
+    "MJL": [
+      "NPR"
+    ],
+    "Mkomike": [
+      "AfC"
+    ],
+    "Mmemaigret": [
+      "AfC"
+    ],
+    "Modussiccandi": [
+      "AfC"
+    ],
+    "Moe Epsilon": [
+      "NPR"
+    ],
+    "MolecularPilot": [
+      "NPR"
+    ],
+    "Montanabw": [
+      "NPR"
+    ],
+    "Montell 74": [
+      "NPR"
+    ],
+    "Moritoriko": [
+      "NPR"
+    ],
+    "Moriwen": [
+      "NPR"
+    ],
+    "Morogris": [
+      "NPR"
+    ],
+    "Mortee": [
+      "AfC",
+      "NPR"
+    ],
+    "Mr. Guye": [
+      "NPR"
+    ],
+    "Mr.Siddharthrajvanshi": [
+      "AfC"
+    ],
+    "MrClog": [
+      "AfC"
+    ],
+    "Mrfoogles": [
+      "NPR"
+    ],
+    "Mschamberlain": [
+      "AfC"
+    ],
+    "MSD50": [
+      "AfC"
+    ],
+    "MSGJ": [
+      "AfC"
+    ],
+    "MSIs 2001": [
+      "AfC"
+    ],
+    "MSK": [
+      "NPR"
+    ],
+    "Mu301": [
+      "NPR"
+    ],
+    "Mudwater": [
+      "NPR"
+    ],
+    "MurielMary": [
+      "AfC",
+      "NPR"
+    ],
+    "MWFwiki": [
+      "NPR"
+    ],
+    "Mwwv": [
+      "AfC"
+    ],
+    "My Pants Metal": [
+      "NPR"
+    ],
+    "Mydreamsparrow": [
+      "NPR"
+    ],
+    "Namita Tudu": [
+      "AfC"
+    ],
+    "Naraht": [
+      "NPR"
+    ],
+    "Nardog": [
+      "NPR"
+    ],
+    "Narraharon": [
+      "AfC"
+    ],
+    "Narutolovehinata5": [
+      "NPR"
+    ],
+    "Nasiryounus": [
+      "AfC"
+    ],
+    "Nathan2055": [
+      "AfC",
+      "NPR"
+    ],
+    "Natureium": [
+      "NPR"
+    ],
+    "Nearlyevil665": [
+      "AfC",
+      "NPR"
+    ],
+    "NegativeMP1": [
+      "AfC"
+    ],
+    "Neko-chan": [
+      "NPR"
+    ],
+    "NeoGaze": [
+      "AfC"
+    ],
+    "Nerd1a4i": [
+      "NPR"
+    ],
+    "Nesshunter": [
+      "AfC"
+    ],
+    "Nesshuntering": [
+      "AfC"
+    ],
+    "Netherzone": [
+      "NPR"
+    ],
+    "Nflpa": [
+      "AfC"
+    ],
+    "Nford24": [
+      "NPR"
+    ],
+    "NickDauphin": [
+      "AfC"
+    ],
+    "Nigej": [
+      "NPR"
+    ],
+    "Nighfidelity": [
+      "AfC",
+      "NPR"
+    ],
+    "Nikolaih": [
+      "NPR"
+    ],
+    "Nil NZ": [
+      "AfC",
+      "NPR"
+    ],
+    "Nimbus227": [
+      "NPR"
+    ],
+    "Ninetyone": [
+      "NPR"
+    ],
+    "Nixleovel": [
+      "AfC"
+    ],
+    "Nizil Shah": [
+      "NPR"
+    ],
+    "Nkon21": [
+      "NPR"
+    ],
+    "No Swan So Fine": [
+      "NPR"
+    ],
+    "Noahfgodard": [
+      "AfC"
+    ],
+    "Nolabob": [
+      "NPR"
+    ],
+    "Noleander": [
+      "NPR"
+    ],
+    "Nomader": [
+      "NPR"
+    ],
+    "Nomadwikiholic1": [
+      "NPR"
+    ],
+    "Noobmaster009": [
+      "AfC"
+    ],
+    "NoonIcarus": [
+      "NPR"
+    ],
+    "Noorullah21": [
+      "NPR"
+    ],
+    "Norellia.sh": [
+      "AfC",
+      "NPR"
+    ],
+    "North8000": [
+      "NPR"
+    ],
+    "NorthBySouthBaranof": [
+      "NPR"
+    ],
+    "Northernhenge": [
+      "NPR"
+    ],
+    "NotAGenious": [
+      "NPR"
+    ],
+    "Notcharizard": [
+      "AfC"
+    ],
+    "NotTheFakeJTP": [
+      "AfC",
+      "NPR"
+    ],
+    "NottNott": [
+      "NPR"
+    ],
+    "Nsk92": [
+      "NPR"
+    ],
+    "Numbermaniac": [
+      "NPR"
+    ],
+    "Nyxion303": [
+      "NPR"
+    ],
+    "Oaktree b": [
+      "NPR"
+    ],
+    "Obaid Raza": [
+      "NPR"
+    ],
+    "Obi2canibe": [
+      "NPR"
+    ],
+    "Officialwikidude": [
+      "AfC"
+    ],
+    "Ogress": [
+      "NPR"
+    ],
+    "Oiyarbepsy": [
+      "NPR"
+    ],
+    "Onel5969": [
+      "NPR"
+    ],
+    "OnlyNano": [
+      "AfC"
+    ],
+    "Oo7565": [
+      "AfC"
+    ],
+    "OohBunnies!": [
+      "AfC"
+    ],
+    "Opm581": [
+      "AfC",
+      "NPR"
+    ],
+    "OrenBochman": [
+      "AfC"
+    ],
+    "Originalmess": [
+      "NPR"
+    ],
+    "Oronsay": [
+      "NPR"
+    ],
+    "Ortizesp": [
+      "NPR"
+    ],
+    "Osarius": [
+      "NPR"
+    ],
+    "Otr500": [
+      "AfC",
+      "NPR"
+    ],
+    "Overthrows": [
+      "NPR"
+    ],
+    "Owain.davies": [
+      "NPR"
+    ],
+    "Owais Al Qarni": [
+      "NPR"
+    ],
+    "Owais Khursheed": [
+      "AfC",
+      "NPR"
+    ],
+    "Ozzie10aaaa": [
+      "AfC",
+      "NPR"
+    ],
+    "PacificDepths": [
+      "NPR"
+    ],
+    "Padavalamkuttanpilla": [
+      "AfC",
+      "NPR"
+    ],
+    "Padgriffin": [
+      "NPR"
+    ],
+    "Padraig Singal": [
+      "AfC"
+    ],
+    "Paine Ellsworth": [
+      "NPR"
+    ],
+    "PamD": [
+      "NPR"
+    ],
+    "PapaMike": [
+      "AfC"
+    ],
+    "Paper9oll": [
+      "NPR"
+    ],
+    "PARAKANYAA": [
+      "NPR"
+    ],
+    "Param Mudgal": [
+      "AfC"
+    ],
+    "Passengerpigeon": [
+      "NPR"
+    ],
+    "Patelsapan": [
+      "AfC"
+    ],
+    "Path slopu": [
+      "AfC"
+    ],
+    "Patient Zero": [
+      "NPR"
+    ],
+    "Paul Vaurie": [
+      "NPR"
+    ],
+    "Paul W": [
+      "AfC",
+      "NPR"
+    ],
+    "Paul2520": [
+      "NPR"
+    ],
+    "Paulthomas2": [
+      "AfC"
+    ],
+    "Pax85": [
+      "AfC"
+    ],
+    "Pbritti": [
+      "AfC",
+      "NPR"
+    ],
+    "Pbrks": [
+      "NPR"
+    ],
+    "PCN02WPS": [
+      "NPR"
+    ],
+    "PedroMcA": [
+      "AfC"
+    ],
+    "Per exemplum": [
+      "AfC",
+      "NPR"
+    ],
+    "Perfect4th": [
+      "NPR"
+    ],
+    "PeriodicEditor": [
+      "AfC",
+      "NPR"
+    ],
+    "Petrb": [
+      "AfC"
+    ],
+    "Pgallert": [
+      "NPR"
+    ],
+    "Phibeatrice": [
+      "NPR"
+    ],
+    "Phil Bridger": [
+      "NPR"
+    ],
+    "PhilDaBirdMan": [
+      "AfC"
+    ],
+    "PhilipBembridge": [
+      "AfC"
+    ],
+    "Philipnelson99": [
+      "NPR"
+    ],
+    "Phlsph7": [
+      "NPR"
+    ],
+    "Phospheros": [
+      "AfC"
+    ],
+    "Pi.1415926535": [
+      "NPR"
+    ],
+    "Pichpich": [
+      "NPR"
+    ],
+    "PigeonChickenFish": [
+      "AfC"
+    ],
+    "Pigsonthewing": [
+      "NPR"
+    ],
+    "Pikks": [
+      "AfC"
+    ],
+    "Pilaz": [
+      "NPR"
+    ],
+    "PilotSuggs": [
+      "AfC"
+    ],
+    "Pinguinn": [
+      "NPR"
+    ],
+    "Pingumeister": [
+      "NPR"
+    ],
+    "Pixarh": [
+      "AfC"
+    ],
+    "Pizzaazul22": [
+      "AfC"
+    ],
+    "Pjjmd": [
+      "AfC"
+    ],
+    "PK650": [
+      "NPR"
+    ],
+    "Pkbwcgs": [
+      "NPR"
+    ],
+    "PKT": [
+      "NPR"
+    ],
+    "Plantdrew": [
+      "NPR"
+    ],
+    "Plum3600": [
+      "AfC"
+    ],
+    "Pmaccabe": [
+      "NPR"
+    ],
+    "Poirot09": [
+      "NPR"
+    ],
+    "Pokelego999": [
+      "AfC"
+    ],
+    "Polo": [
+      "NPR"
+    ],
+    "Porterjoh": [
+      "NPR"
+    ],
+    "Pppery (alt)": [
+      "NPR"
+    ],
+    "Praseodymium-141": [
+      "AfC",
+      "NPR"
+    ],
+    "Praxidicae": [
+      "NPR"
+    ],
+    "PRehse": [
+      "NPR"
+    ],
+    "Premprakashmeena.iitkgp": [
+      "AfC"
+    ],
+    "Pressbabo": [
+      "AfC"
+    ],
+    "PrimaLInnstinct": [
+      "AfC"
+    ],
+    "Prince of Erebor": [
+      "NPR"
+    ],
+    "ProClasher97": [
+      "NPR"
+    ],
+    "Prof tpms": [
+      "NPR"
+    ],
+    "Puddleglum2.0": [
+      "AfC"
+    ],
+    "Pushon007": [
+      "AfC"
+    ],
+    "Puzzledvegetable": [
+      "AfC"
+    ],
+    "Pygos": [
+      "NPR"
+    ],
+    "Pyrrho the Skipper": [
+      "NPR"
+    ],
+    "Pythoncoder": [
+      "NPR"
+    ],
+    "Qcne": [
+      "NPR"
+    ],
+    "QEnigma": [
+      "NPR"
+    ],
+    "QPT": [
+      "AfC"
+    ],
+    "QuantifiedElf": [
+      "AfC"
+    ],
+    "QuantumRealm": [
+      "AfC"
+    ],
+    "Queen of Hearts": [
+      "NPR"
+    ],
+    "QueerEcofeminist": [
+      "AfC",
+      "NPR"
+    ],
+    "QuicoleJR": [
+      "NPR"
+    ],
+    "Quiddity (WMF)": [
+      "NPR"
+    ],
+    "Quinntropy": [
+      "NPR"
+    ],
+    "Quinto Simmaco": [
+      "AfC"
+    ],
+    "Qwerfjkl": [
+      "AfC"
+    ],
+    "RA0808": [
+      "NPR"
+    ],
+    "Raahi Articles": [
+      "AfC"
+    ],
+    "RachelTensions": [
+      "NPR"
+    ],
+    "Rahulajitpal": [
+      "AfC"
+    ],
+    "Rahulsoman": [
+      "AfC"
+    ],
+    "Rajkumar100989": [
+      "AfC"
+    ],
+    "Ramaksoud2000": [
+      "AfC"
+    ],
+    "Rambley": [
+      "AfC",
+      "NPR"
+    ],
+    "Rangasyd": [
+      "NPR"
+    ],
+    "Ratnahastin": [
+      "NPR"
+    ],
+    "Ravensfire": [
+      "NPR"
+    ],
+    "Ravenswing": [
+      "NPR"
+    ],
+    "RayquazaDialgaWeird2210": [
+      "AfC"
+    ],
+    "Razer2115": [
+      "NPR"
+    ],
+    "Red-tailed hawk": [
+      "AfC"
+    ],
+    "RedactedHumanoid": [
+      "NPR"
+    ],
+    "Redalert2fan": [
+      "NPR"
+    ],
+    "RedShellMomentum": [
+      "AfC"
+    ],
+    "Reez95": [
+      "AfC"
+    ],
+    "Relativity": [
+      "AfC",
+      "NPR"
+    ],
+    "Remsense": [
+      "NPR"
+    ],
+    "Reverosie": [
+      "AfC"
+    ],
+    "Rht bd": [
+      "NPR"
+    ],
+    "Rich Smith": [
+      "NPR"
+    ],
+    "Rijinatwiki": [
+      "AfC"
+    ],
+    "Rikster2": [
+      "NPR"
+    ],
+    "Rileychilds": [
+      "AfC"
+    ],
+    "RingtailedFox": [
+      "NPR"
+    ],
+    "Rkieferbaum": [
+      "NPR"
+    ],
+    "Robert McClenon": [
+      "NPR"
+    ],
+    "Robert Skyhawk": [
+      "AfC"
+    ],
+    "Robiaid": [
+      "AfC"
+    ],
+    "Robloxguest3": [
+      "AfC"
+    ],
+    "RoboCric": [
+      "AfC",
+      "NPR"
+    ],
+    "Rockpeterson": [
+      "AfC"
+    ],
+    "Rodney Baggins": [
+      "NPR"
+    ],
+    "Rodw": [
+      "NPR"
+    ],
+    "Roniius": [
+      "NPR"
+    ],
+    "Rose Abrams": [
+      "NPR"
+    ],
+    "Rotartsinnimze": [
+      "AfC"
+    ],
+    "RoyalMarwari001": [
+      "AfC"
+    ],
+    "Royiswariii": [
+      "AfC",
+      "NPR"
+    ],
+    "RPSkokie": [
+      "AfC"
+    ],
+    "Rsd95": [
+      "AfC"
+    ],
+    "Rsrikanth05": [
+      "AfC"
+    ],
+    "Rtpaz": [
+      "NPR"
+    ],
+    "Rukah": [
+      "AfC"
+    ],
+    "Rupeshreddyk": [
+      "AfC"
+    ],
+    "Rusty Cat": [
+      "NPR"
+    ],
+    "RustyOldShip": [
+      "AfC"
+    ],
+    "Ryan shell": [
+      "NPR"
+    ],
+    "S5A-0043": [
+      "AfC"
+    ],
+    "Sabaybayin": [
+      "AfC"
+    ],
+    "Sachinvenga": [
+      "AfC"
+    ],
+    "Saffah13": [
+      "AfC"
+    ],
+    "SAFMA": [
+      "AfC"
+    ],
+    "Sagotreespirit": [
+      "AfC",
+      "NPR"
+    ],
+    "Sahaib": [
+      "NPR"
+    ],
+    "Sakura Cartelet": [
+      "AfC"
+    ],
+    "Salimfadhley": [
+      "NPR"
+    ],
+    "Sallicio": [
+      "NPR"
+    ],
+    "Sam Sailor": [
+      "AfC",
+      "NPR"
+    ],
+    "Sam-2727": [
+      "AfC"
+    ],
+    "SamHolt6": [
+      "AfC",
+      "NPR"
+    ],
+    "Samoht27": [
+      "AfC"
+    ],
+    "Samourc": [
+      "AfC"
+    ],
+    "SamStrongTalks": [
+      "AfC"
+    ],
+    "Samuell1616": [
+      "AfC"
+    ],
+    "SanalPhenomtec": [
+      "AfC"
+    ],
+    "Sandcastleref": [
+      "AfC"
+    ],
+    "SandyGeorgia": [
+      "NPR"
+    ],
+    "Sanskari": [
+      "AfC"
+    ],
+    "Santa Saana": [
+      "NPR"
+    ],
+    "Saqib": [
+      "AfC"
+    ],
+    "Sarge Graham": [
+      "NPR"
+    ],
+    "Sariel Xilo": [
+      "NPR"
+    ],
+    "Satdeep Gill": [
+      "NPR"
+    ],
+    "Sawyer777": [
+      "NPR"
+    ],
+    "ScalarFactor": [
+      "AfC",
+      "NPR"
+    ],
+    "Scaledish": [
+      "AfC",
+      "NPR"
+    ],
+    "Scanlan": [
+      "NPR"
+    ],
+    "Sceptre": [
+      "AfC"
+    ],
+    "Schetm": [
+      "NPR"
+    ],
+    "Schierbecker": [
+      "NPR"
+    ],
+    "Scope creep": [
+      "NPR"
+    ],
+    "Scoria": [
+      "NPR"
+    ],
+    "ScottyNolan": [
+      "NPR"
+    ],
+    "ScrabbleTiles": [
+      "NPR"
+    ],
+    "Scythre": [
+      "AfC"
+    ],
+    "SD0001": [
+      "AfC"
+    ],
+    "Seacactus 13": [
+      "NPR"
+    ],
+    "Seawolf35": [
+      "AfC",
+      "NPR"
+    ],
+    "SecretName101": [
+      "AfC"
+    ],
+    "SemiAutomatedTime": [
+      "NPR"
+    ],
+    "SemiHypercube": [
+      "AfC"
+    ],
+    "Semmendinger": [
+      "NPR"
+    ],
+    "SenkiZesshou": [
+      "NPR"
+    ],
+    "Seppi333": [
+      "NPR"
+    ],
+    "SeraphWiki": [
+      "AfC"
+    ],
+    "Serenesage": [
+      "AfC"
+    ],
+    "Sevenstxrsquid": [
+      "NPR"
+    ],
+    "ShadowBallX": [
+      "NPR"
+    ],
+    "ShalizaAnne": [
+      "AfC"
+    ],
+    "Shaneeshwara": [
+      "AfC"
+    ],
+    "Shearonink": [
+      "AfC",
+      "NPR"
+    ],
+    "Shellacked!": [
+      "NPR"
+    ],
+    "Shellwood": [
+      "NPR"
+    ],
+    "Shivajivarma": [
+      "AfC"
+    ],
+    "ShizainCute": [
+      "AfC"
+    ],
+    "Shocksingularity": [
+      "NPR"
+    ],
+    "ShubhanTelang": [
+      "AfC"
+    ],
+    "Shushugah": [
+      "NPR"
+    ],
+    "Shuvokhan123": [
+      "AfC"
+    ],
+    "Shuvoraj": [
+      "AfC"
+    ],
+    "SihleRzee": [
+      "AfC"
+    ],
+    "Sillow14": [
+      "AfC"
+    ],
+    "SilverplateDelta": [
+      "AfC"
+    ],
+    "Simon Peter Hughes": [
+      "NPR"
+    ],
+    "Simongraham": [
+      "NPR"
+    ],
+    "Sionk": [
+      "NPR"
+    ],
+    "Sir Banking": [
+      "NPR"
+    ],
+    "Sir Joseph": [
+      "AfC",
+      "NPR"
+    ],
+    "Sirdog": [
+      "NPR"
+    ],
+    "Siroxo": [
+      "NPR"
+    ],
+    "Sjsastto": [
+      "AfC"
+    ],
+    "Sjö": [
+      "NPR"
+    ],
+    "Skarmory": [
+      "NPR"
+    ],
+    "Sksatsuma": [
+      "AfC",
+      "NPR"
+    ],
+    "Skynxnex": [
+      "NPR"
+    ],
+    "Skyshifter": [
+      "NPR"
+    ],
+    "SL93": [
+      "NPR"
+    ],
+    "Slashme": [
+      "NPR"
+    ],
+    "Slatersteven": [
+      "NPR"
+    ],
+    "Slgrandson": [
+      "NPR"
+    ],
+    "Sm8900": [
+      "NPR"
+    ],
+    "Smallangryplanet": [
+      "NPR"
+    ],
+    "Smartyllama": [
+      "NPR"
+    ],
+    "SMcCandlish": [
+      "NPR"
+    ],
+    "SmileBlueJay97": [
+      "AfC"
+    ],
+    "Smirkybec": [
+      "NPR"
+    ],
+    "SmokeyJoe": [
+      "NPR"
+    ],
+    "Smoozle": [
+      "AfC"
+    ],
+    "Snek01": [
+      "NPR"
+    ],
+    "Snow Rise": [
+      "NPR"
+    ],
+    "Snowmanonahoe": [
+      "NPR"
+    ],
+    "Snowycats": [
+      "NPR"
+    ],
+    "SnowyRiver28": [
+      "NPR"
+    ],
+    "Snugglebuns": [
+      "NPR"
+    ],
+    "Somepinkdude": [
+      "AfC",
+      "NPR"
+    ],
+    "Sophisticatedevening": [
+      "NPR"
+    ],
+    "SounderBruce": [
+      "NPR"
+    ],
+    "SpeedReader": [
+      "AfC"
+    ],
+    "Spinster300": [
+      "NPR"
+    ],
+    "SportingFlyer": [
+      "NPR"
+    ],
+    "SpragueThomson": [
+      "AfC",
+      "NPR"
+    ],
+    "Spurb": [
+      "AfC"
+    ],
+    "Spyder212": [
+      "NPR"
+    ],
+    "Squawk7700": [
+      "NPR"
+    ],
+    "SS49": [
+      "NPR"
+    ],
+    "SshibumXZ": [
+      "AfC"
+    ],
+    "StAnselm": [
+      "NPR"
+    ],
+    "Starcheerspeaksnewslostwars": [
+      "NPR"
+    ],
+    "StartOkayStop": [
+      "AfC",
+      "NPR"
+    ],
+    "StarTrekker": [
+      "NPR"
+    ],
+    "Staticshakedown": [
+      "NPR"
+    ],
+    "Stausifr": [
+      "AfC"
+    ],
+    "StefenTower": [
+      "NPR"
+    ],
+    "Stephani21": [
+      "AfC"
+    ],
+    "Steve Quinn": [
+      "NPR"
+    ],
+    "StewdioMACK": [
+      "NPR"
+    ],
+    "Stikkyy": [
+      "NPR"
+    ],
+    "Storchy": [
+      "AfC"
+    ],
+    "Storye book": [
+      "NPR"
+    ],
+    "Strange Orange": [
+      "NPR"
+    ],
+    "StraussInTheHouse": [
+      "NPR"
+    ],
+    "Stuartyeates": [
+      "NPR"
+    ],
+    "Sturmvogel 66": [
+      "NPR"
+    ],
+    "Sudiproychoudhury945": [
+      "AfC"
+    ],
+    "Sue Rangell": [
+      "AfC"
+    ],
+    "Suitskvarts": [
+      "AfC"
+    ],
+    "Sulfurboy": [
+      "AfC",
+      "NPR"
+    ],
+    "SunDawn": [
+      "NPR"
+    ],
+    "Sundostund": [
+      "NPR"
+    ],
+    "SunloungerFrog": [
+      "NPR"
+    ],
+    "Suonii180": [
+      "NPR"
+    ],
+    "SuperCode111": [
+      "NPR"
+    ],
+    "SuperHamster": [
+      "NPR"
+    ],
+    "SuperSwift": [
+      "AfC"
+    ],
+    "Suriname0": [
+      "NPR"
+    ],
+    "Swpb": [
+      "NPR"
+    ],
+    "Syedhanif86": [
+      "AfC"
+    ],
+    "Symmachus Auxiliarus": [
+      "AfC"
+    ],
+    "Synoman Barris": [
+      "AfC"
+    ],
+    "Tachs": [
+      "AfC"
+    ],
+    "Tacyarg": [
+      "NPR"
+    ],
+    "Tajotep": [
+      "NPR"
+    ],
+    "Taketa": [
+      "NPR"
+    ],
+    "Taking Out The Trash": [
+      "AfC",
+      "NPR"
+    ],
+    "TAnthony": [
+      "NPR"
+    ],
+    "Target360YT": [
+      "AfC"
+    ],
+    "Tarheel95": [
+      "AfC"
+    ],
+    "Tarlby": [
+      "AfC",
+      "NPR"
+    ],
+    "TarnishedPath": [
+      "NPR"
+    ],
+    "Tashif": [
+      "AfC"
+    ],
+    "Tatupiplu": [
+      "NPR"
+    ],
+    "Tayeb188": [
+      "AfC"
+    ],
+    "Taymcgaw": [
+      "AfC"
+    ],
+    "Tazerdadog": [
+      "NPR"
+    ],
+    "Teblick": [
+      "NPR"
+    ],
+    "TechnoSquirrel69": [
+      "AfC"
+    ],
+    "Tenshi Hinanawi": [
+      "AfC",
+      "NPR"
+    ],
+    "Tesleemah": [
+      "AfC",
+      "NPR"
+    ],
+    "Tgrbengal": [
+      "AfC"
+    ],
+    "The C of E": [
+      "NPR"
+    ],
+    "The Drover's Wife": [
+      "NPR"
+    ],
+    "The Earwig": [
+      "AfC"
+    ],
+    "The Gnome": [
+      "NPR"
+    ],
+    "The Grid": [
+      "NPR"
+    ],
+    "The Illusive Man": [
+      "AfC"
+    ],
+    "The Knowledge Pirate": [
+      "AfC"
+    ],
+    "The Master of Mayhem": [
+      "AfC"
+    ],
+    "The Rambling Man": [
+      "NPR"
+    ],
+    "The Squirrel Conspiracy": [
+      "NPR"
+    ],
+    "The Writer 2.0": [
+      "AfC"
+    ],
+    "The-Pope": [
+      "NPR"
+    ],
+    "The9Man": [
+      "NPR"
+    ],
+    "Thebiguglyalien": [
+      "NPR"
+    ],
+    "TheBirdsShedTears": [
+      "NPR"
+    ],
+    "TheBritinator": [
+      "NPR"
+    ],
+    "TheCascadian": [
+      "AfC"
+    ],
+    "TheDoctorWho": [
+      "NPR"
+    ],
+    "TheGeneralUser": [
+      "NPR"
+    ],
+    "TheGreatEditor024": [
+      "NPR"
+    ],
+    "TheJoebro64": [
+      "NPR"
+    ],
+    "TheKryptonSonS96": [
+      "AfC"
+    ],
+    "TheLonelyPather": [
+      "NPR"
+    ],
+    "TheLongTone": [
+      "NPR"
+    ],
+    "Themajidi": [
+      "AfC"
+    ],
+    "ThePlatypusofDoom": [
+      "NPR"
+    ],
+    "ThePromenader": [
+      "AfC",
+      "NPR"
+    ],
+    "Theroadislong": [
+      "AfC",
+      "NPR"
+    ],
+    "TheSandDoctor": [
+      "AfC"
+    ],
+    "TheTechie": [
+      "NPR"
+    ],
+    "TheTechnician27": [
+      "AfC",
+      "NPR"
+    ],
+    "Thewolfchild": [
+      "NPR"
+    ],
+    "Thilio": [
+      "NPR"
+    ],
+    "Thilsebatti": [
+      "NPR"
+    ],
+    "Timothytyy": [
+      "NPR"
+    ],
+    "Timtrent": [
+      "AfC",
+      "NPR"
+    ],
+    "TipsyElephant": [
+      "AfC"
+    ],
+    "TJH2018": [
+      "AfC"
+    ],
+    "TNM101": [
+      "AfC"
+    ],
+    "TNTPublic": [
+      "NPR"
+    ],
+    "Tobi Samuel424": [
+      "AfC"
+    ],
+    "Toddst1": [
+      "NPR"
+    ],
+    "Tol": [
+      "NPR"
+    ],
+    "Tomer T": [
+      "NPR"
+    ],
+    "Tony Holkham": [
+      "NPR"
+    ],
+    "Tony Tan": [
+      "NPR"
+    ],
+    "Topher385": [
+      "AfC"
+    ],
+    "TouchedWithFire": [
+      "NPR"
+    ],
+    "Tpdwkouaa": [
+      "NPR"
+    ],
+    "Trainsandotherthings": [
+      "NPR"
+    ],
+    "Trainsskyscrapers": [
+      "NPR"
+    ],
+    "Triptothecottage": [
+      "AfC",
+      "NPR"
+    ],
+    "Troutfarm27": [
+      "NPR"
+    ],
+    "TRUTHBOUTME": [
+      "AfC"
+    ],
+    "Ts12rAc": [
+      "NPR"
+    ],
+    "Tsvetozarv": [
+      "AfC"
+    ],
+    "Tumukundedodos": [
+      "AfC"
+    ],
+    "Turgan": [
+      "NPR"
+    ],
+    "Tyler666666": [
+      "AfC"
+    ],
+    "Tymon.r": [
+      "AfC"
+    ],
+    "Ubift": [
+      "AfC"
+    ],
+    "Ubiquity": [
+      "NPR"
+    ],
+    "Uffda608": [
+      "NPR"
+    ],
+    "Ukexpat": [
+      "AfC",
+      "NPR"
+    ],
+    "ULPS": [
+      "NPR"
+    ],
+    "Ultraodan": [
+      "AfC"
+    ],
+    "Ulubatli Hasan": [
+      "NPR"
+    ],
+    "Umakant Bhalerao": [
+      "AfC"
+    ],
+    "Umerali2204": [
+      "AfC"
+    ],
+    "Uncle Bash007": [
+      "NPR"
+    ],
+    "UnitedStatesian": [
+      "AfC",
+      "NPR"
+    ],
+    "UpTheOctave!": [
+      "NPR"
+    ],
+    "Urban Versis 32": [
+      "AfC"
+    ],
+    "Usedtobecool": [
+      "NPR"
+    ],
+    "Userafw": [
+      "AfC"
+    ],
+    "Username Needed": [
+      "AfC"
+    ],
+    "Usernamekiran": [
+      "NPR"
+    ],
+    "UtherSRG": [
+      "NPR"
+    ],
+    "Utopes": [
+      "AfC",
+      "NPR"
+    ],
+    "UzbukUdash": [
+      "NPR"
+    ],
+    "Valenciano": [
+      "NPR"
+    ],
+    "Vandana Wadhawan": [
+      "AfC"
+    ],
+    "Vanderwaalforces": [
+      "NPR"
+    ],
+    "Vanilla Wizard": [
+      "NPR"
+    ],
+    "Vanjagenije": [
+      "AfC"
+    ],
+    "Varnent": [
+      "NPR"
+    ],
+    "Vaselineeeeeeee": [
+      "NPR"
+    ],
+    "Vaticidalprophet": [
+      "NPR"
+    ],
+    "Veko": [
+      "AfC",
+      "NPR"
+    ],
+    "Velella": [
+      "NPR"
+    ],
+    "VerifiedCactus": [
+      "NPR"
+    ],
+    "Veritasphere": [
+      "NPR"
+    ],
+    "Vermont": [
+      "NPR"
+    ],
+    "VersaceSpace": [
+      "AfC"
+    ],
+    "Vestrian24Bio": [
+      "AfC",
+      "NPR"
+    ],
+    "Vestrian24Bio 2": [
+      "AfC"
+    ],
+    "Vgbypw": [
+      "NPR"
+    ],
+    "Vicke1988": [
+      "AfC"
+    ],
+    "Vinegarymass911": [
+      "NPR"
+    ],
+    "ViridianPenguin": [
+      "NPR"
+    ],
+    "Vivio Testarossa": [
+      "AfC"
+    ],
+    "Vlad.sergienko": [
+      "AfC"
+    ],
+    "VQuakr": [
+      "NPR"
+    ],
+    "Vrxces": [
+      "NPR"
+    ],
+    "WaddlesJP13": [
+      "AfC",
+      "NPR"
+    ],
+    "Wasianpower": [
+      "NPR"
+    ],
+    "WeatherWriter": [
+      "NPR"
+    ],
+    "WeirdNAnnoyed": [
+      "AfC"
+    ],
+    "Werldwayd": [
+      "AfC"
+    ],
+    "WeWake": [
+      "AfC"
+    ],
+    "Wherearemykeyes": [
+      "AfC"
+    ],
+    "WheresTristan": [
+      "AfC"
+    ],
+    "Whispering": [
+      "AfC"
+    ],
+    "Whispyhistory": [
+      "NPR"
+    ],
+    "Whoisjohngalt": [
+      "NPR"
+    ],
+    "Why? I Ask": [
+      "AfC"
+    ],
+    "Widefox": [
+      "NPR"
+    ],
+    "WikiAviator": [
+      "AfC",
+      "NPR"
+    ],
+    "WikiDan61": [
+      "NPR"
+    ],
+    "Wikiediter2029": [
+      "NPR"
+    ],
+    "Wikieditor019": [
+      "AfC",
+      "NPR"
+    ],
+    "WikiOriginal-9": [
+      "NPR"
+    ],
+    "Wikipedian2": [
+      "AfC"
+    ],
+    "Wikipediæ philosophia": [
+      "NPR"
+    ],
+    "Wikishovel": [
+      "NPR"
+    ],
+    "WikiWikiWayne": [
+      "AfC"
+    ],
+    "Wilhelmina Will": [
+      "AfC"
+    ],
+    "William2001": [
+      "NPR"
+    ],
+    "Winner 42": [
+      "NPR"
+    ],
+    "Wittylama": [
+      "NPR"
+    ],
+    "Wniallah": [
+      "AfC"
+    ],
+    "Wolbo": [
+      "NPR"
+    ],
+    "Wooerfara3661": [
+      "AfC"
+    ],
+    "Worldbruce": [
+      "AfC"
+    ],
+    "Worldexplorer2014": [
+      "AfC"
+    ],
+    "WormEater13": [
+      "AfC",
+      "NPR"
+    ],
+    "Worren-Dornfund": [
+      "AfC"
+    ],
+    "WPweb3": [
+      "AfC"
+    ],
+    "WWGB": [
+      "NPR"
+    ],
+    "Wylve": [
+      "AfC"
+    ],
+    "Xcia0069": [
+      "NPR"
+    ],
+    "Xclusivzik": [
+      "AfC"
+    ],
+    "Xexerss": [
+      "NPR"
+    ],
+    "Xnuala": [
+      "AfC"
+    ],
+    "Xoak": [
+      "AfC",
+      "NPR"
+    ],
+    "Xwejnusgozo": [
+      "NPR"
+    ],
+    "Yanjipy": [
+      "AfC"
+    ],
+    "Yashovardhan Dhanania": [
+      "AfC"
+    ],
+    "Yeeno": [
+      "AfC",
+      "NPR"
+    ],
+    "Yenistardom": [
+      "NPR"
+    ],
+    "Yihyetov": [
+      "AfC"
+    ],
+    "Yoblyblob": [
+      "NPR"
+    ],
+    "Yogwi21": [
+      "NPR"
+    ],
+    "You Can Act Like A Man": [
+      "AfC"
+    ],
+    "YoungForever": [
+      "NPR"
+    ],
+    "YuniToumei": [
+      "NPR"
+    ],
+    "Z. Patterson": [
+      "NPR"
+    ],
+    "Zad68": [
+      "AfC"
+    ],
+    "ZAE88": [
+      "AfC"
+    ],
+    "Zakhx150": [
+      "NPR"
+    ],
+    "ZappaOMatic": [
+      "NPR"
+    ],
+    "ZDetective": [
+      "AfC"
+    ],
+    "ZDRX": [
+      "NPR"
+    ],
+    "Zeibgeist": [
+      "NPR"
+    ],
+    "ZI Jony": [
+      "AfC",
+      "NPR"
+    ],
+    "Zindor": [
+      "AfC"
+    ],
+    "Zingarese": [
+      "NPR"
+    ],
+    "Zippybonzo": [
+      "NPR"
+    ],
+    "ZooBlazer": [
+      "NPR"
+    ],
+    "Zppix": [
+      "AfC"
+    ],
+    "Zubairabbas": [
+      "AfC"
+    ],
+    "ZyphorianNexus": [
+      "AfC",
+      "NPR"
+    ],
+    "Zzz plant": [
+      "NPR"
+    ],
+    "~delta": [
+      "NPR"
+    ],
+    "Викидим": [
+      "NPR"
+    ],
+    "عماد الدين المقدسي": [
+      "AfC"
+    ],
+    "बडा काजी": [
+      "NPR"
+    ],
+    "হানিফ আলী": [
+      "AfC"
+    ],
+    "☈": [
+      "NPR"
+    ]
+  }
+}

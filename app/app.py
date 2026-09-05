@@ -1,33 +1,152 @@
-"""Minimal Flask demo for Multilingual Reference Need scoring.
+"""NPP urgency queue + Reference Need / Tone Check prototype.
 
 Run: python app/app.py
-Open: http://localhost:8765
+Open: http://localhost:8765  (ranked queue)
+      http://localhost:8765/score  (paste-titles scorer)
 """
 
 from __future__ import annotations
 
+import json
 import os
 import sys
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory
 
-# Allow `python app/app.py` from repo root or app/
 APP_DIR = Path(__file__).resolve().parent
+ROOT = APP_DIR.parent
 if str(APP_DIR) not in sys.path:
     sys.path.insert(0, str(APP_DIR))
 
+from npp_config import SNAPSHOT_PATH  # noqa: E402
 from scoring import score_batch  # noqa: E402
 
 STATIC_DIR = APP_DIR / "static"
 PORT = int(os.environ.get("PORT", "8765"))
+SNAPSHOT_FILE = ROOT / SNAPSHOT_PATH
 
 app = Flask(__name__, static_folder=str(STATIC_DIR), static_url_path="")
+
+
+def _load_snapshot() -> dict:
+    if not SNAPSHOT_FILE.exists():
+        return {
+            "generated_at": None,
+            "lang": "en",
+            "count": 0,
+            "articles": [],
+            "error": (
+                f"No snapshot at {SNAPSHOT_PATH}. "
+                "Run: python scripts/refresh_npp_queue.py"
+            ),
+        }
+    with SNAPSHOT_FILE.open(encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def _truthy(value: str | None) -> bool:
+    if value is None:
+        return False
+    return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
 @app.get("/")
 def index():
     return send_from_directory(STATIC_DIR, "index.html")
+
+
+@app.get("/score")
+def score_page():
+    return send_from_directory(STATIC_DIR, "score.html")
+
+
+@app.get("/api/queue")
+def api_queue():
+    data = _load_snapshot()
+    articles = list(data.get("articles") or [])
+
+    q = (request.args.get("q") or "").strip().lower()
+    min_views = request.args.get("min_views", type=float)
+    if min_views is None:
+        min_views = 0.0
+
+    filters = {
+        "minors": _truthy(request.args.get("minors")),
+        "ctop": _truthy(request.args.get("ctop")),
+        "ai": _truthy(request.args.get("ai")),
+        "chatgpt": _truthy(request.args.get("chatgpt")),
+        "blocked_creator": _truthy(request.args.get("blocked_creator")),
+        "reviewer_creator": _truthy(request.args.get("reviewer_creator")),
+        "notability": _truthy(request.args.get("notability")),
+        "pov": _truthy(request.args.get("pov")),
+        "athlete": _truthy(request.args.get("athlete")),
+        "sports": _truthy(request.args.get("sports")),
+        "violence": _truthy(request.args.get("violence")),
+        "afc": _truthy(request.args.get("afc")),
+        "coi": _truthy(request.args.get("coi")),
+        "promotional": _truthy(request.args.get("promotional")),
+        "orphan": _truthy(request.args.get("orphan")),
+        "blp": _truthy(request.args.get("blp")),
+        "has_views": _truthy(request.args.get("has_views")),
+    }
+
+    def keep(a: dict) -> bool:
+        if q and q not in (a.get("title") or "").lower():
+            return False
+        views = a.get("avg_daily_views") or 0
+        if views < min_views:
+            return False
+        if filters["has_views"] and views <= 0:
+            return False
+        if filters["minors"] and not a.get("is_minor"):
+            return False
+        if filters["ctop"] and not a.get("ctop"):
+            return False
+        if filters["ai"] and not a.get("ai_generated"):
+            return False
+        if filters["chatgpt"] and not a.get("chatgpt"):
+            return False
+        if filters["blocked_creator"] and not a.get("creator_blocked"):
+            return False
+        if filters["reviewer_creator"] and not a.get("reviewer_creator"):
+            return False
+        if filters["notability"] and not a.get("notability"):
+            return False
+        if filters["pov"] and not a.get("pov"):
+            return False
+        if filters["athlete"] and not (a.get("sports") or a.get("athlete")):
+            return False
+        if filters["sports"] and not (a.get("sports") or a.get("athlete")):
+            return False
+        if filters["violence"] and not a.get("violence"):
+            return False
+        if filters["afc"] and not a.get("afc_accepted"):
+            return False
+        if filters["coi"] and not a.get("coi"):
+            return False
+        if filters["promotional"] and not a.get("promotional"):
+            return False
+        if filters["orphan"] and not (
+            a.get("orphan_links") or a.get("orphan_category")
+        ):
+            return False
+        if filters["blp"] and not a.get("living_person"):
+            return False
+        return True
+
+    filtered = [a for a in articles if keep(a)]
+    return jsonify(
+        {
+            "generated_at": data.get("generated_at"),
+            "lang": data.get("lang", "en"),
+            "count": len(filtered),
+            "total_in_snapshot": data.get("count", len(articles)),
+            "sql_only": data.get("sql_only"),
+            "error": data.get("error"),
+            "articles": filtered,
+        }
+    )
 
 
 @app.post("/api/score-batch")

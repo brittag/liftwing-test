@@ -8,13 +8,20 @@ from __future__ import annotations
 
 import os
 import time
+from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
 import requests
+from dotenv import load_dotenv
+
+# Contact-bearing User-Agent lives in .env (see .env.example).
+_ROOT = Path(__file__).resolve().parent.parent
+load_dotenv(_ROOT / ".env")
+load_dotenv()
 
 LIFTWING_BASE = "https://api.wikimedia.org/service/lw/inference/v1/models"
-MIN_INTERVAL = 0.15
+MIN_INTERVAL = 1.0
 MAX_BATCH_SIZE = 100
 TONE_THRESHOLD = 0.80
 MAX_TONE_PARAGRAPHS = 40
@@ -22,9 +29,10 @@ EDIT_CHECK_BATCH = 20
 MIN_PARAGRAPH_CHARS = 40
 # Temporarily skip Reference Need Lift Wing calls (set True to re-enable).
 ENABLE_REFERENCE_NEED = True
+# Generic fallback only — set WIKIMEDIA_USER_AGENT in .env for real API use.
 DEFAULT_USER_AGENT = (
     "ReferenceNeedPrototype/0.1 "
-    "(User:Dreamyshade, brittag@gmail.com) "
+    "(https://github.com/brittag/liftwing-test; contact via repo) "
     "research-prototype"
 )
 
