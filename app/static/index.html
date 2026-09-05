@@ -82,6 +82,47 @@
     .chip.hot { border-color: #c44; background: #fff0f0; }
     .chip.cool { border-color: #2a7; background: #eefaf2; color: #14633a; }
     .hidden { display: none; }
+    details.rescore {
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 0.35rem 0.6rem;
+    }
+    details.rescore summary {
+      cursor: pointer;
+      font-weight: 600;
+      user-select: none;
+    }
+    details.rescore summary .dirty { color: #8a6d00; font-weight: 500; }
+    .rescore-body { margin-top: 0.5rem; }
+    .rescore-group { margin-bottom: 0.6rem; }
+    .rescore-group h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #555;
+      margin: 0 0 0.3rem;
+    }
+    .rescore-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+      gap: 0.3rem 1rem;
+    }
+    .rescore-grid label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .rescore-grid input {
+      font: inherit;
+      width: 5.5rem;
+      padding: 0.2rem 0.3rem;
+      text-align: right;
+    }
+    .rescore-grid input.changed { border-color: #d4a800; background: #fff8d6; }
+    .rescore-actions { display: flex; gap: 0.5rem; align-items: center; }
   </style>
 </head>
 <body>
@@ -115,6 +156,22 @@
     <label><input type="checkbox" id="orphan" /> Orphan</label>
     <button type="button" id="reload">Reload</button>
   </div>
+
+  <details class="rescore" id="rescore">
+    <summary>Rescore <span class="dirty" id="rescore-dirty"></span></summary>
+    <div class="rescore-body">
+      <p class="hint">
+        Edit any weight to re-rank the snapshot live. Continuous factors
+        scale <code>log1p(x) / log1p(cap)</code> up to their max; the rest are
+        flat bonuses/penalties. Changed fields are highlighted yellow.
+      </p>
+      <div id="rescore-groups"></div>
+      <div class="rescore-actions">
+        <button type="button" id="rescore-reset">Reset to defaults</button>
+        <button type="button" id="rescore-copy">Copy as JSON</button>
+      </div>
+    </div>
+  </details>
 
   <p class="meta" id="meta"></p>
   <p id="status"></p>
@@ -289,7 +346,138 @@
       ]) {
         if (document.getElementById(id).checked) params.set(id, "1");
       }
+      for (const [key, value] of Object.entries(rescoreOverrides())) {
+        params.set("w_" + key, value);
+      }
       return params;
+    }
+
+    // ---- Rescore zippy -----------------------------------------------------
+    const RESCORE_GROUPS = [
+      { title: "Continuous (max points)", keys: [
+        ["reference_need_max", "Reference need"],
+        ["pageviews_max", "Pageviews"],
+        ["page_len_max", "Page length"],
+      ]},
+      { title: "Curves & age", keys: [
+        ["pageview_log_cap", "Pageview log cap (views/day)"],
+        ["page_len_log_cap", "Page length log cap (bytes)"],
+        ["stale_days", "Stale after (days)"],
+        ["older_than_90d", "Stale bonus"],
+      ]},
+      { title: "Bonuses & penalties", keys: [
+        ["ai_generated", "AI-generated"],
+        ["chatgpt", "ChatGPT citation"],
+        ["minor_blp", "Minor (BLP)"],
+        ["living_person", "Living person"],
+        ["ctop", "Contentious topic"],
+        ["notability", "Notability tag"],
+        ["coi", "COI tag"],
+        ["promotional", "Promotional tag"],
+        ["orphan_links", "Orphan (no links)"],
+        ["orphan_category_only", "Orphan (category only)"],
+        ["pov", "POV dispute"],
+        ["violence", "Violence category"],
+        ["creator_blocked", "Blocked creator"],
+        ["disambiguation", "Disambiguation"],
+        ["reviewer_creator", "Reviewer creator"],
+        ["afc_accepted", "Accepted AfC"],
+        ["sports", "Sports"],
+      ]},
+    ];
+
+    let rescoreDefaults = {};
+    const rescoreInputs = new Map();
+    const dirtyEl = document.getElementById("rescore-dirty");
+
+    function rescoreOverrides() {
+      const out = {};
+      for (const [key, input] of rescoreInputs) {
+        const raw = input.value.trim();
+        if (raw === "") continue;
+        const num = Number(raw);
+        if (!Number.isFinite(num) || num === rescoreDefaults[key]) continue;
+        out[key] = num;
+      }
+      return out;
+    }
+
+    function markRescoreState() {
+      const overrides = rescoreOverrides();
+      for (const [key, input] of rescoreInputs) {
+        input.classList.toggle("changed", key in overrides);
+      }
+      const changed = Object.keys(overrides).length;
+      dirtyEl.textContent = changed ? `(${changed} changed)` : "";
+    }
+
+    function buildRescoreForm(defaults) {
+      rescoreDefaults = defaults;
+      const container = document.getElementById("rescore-groups");
+      container.innerHTML = "";
+      rescoreInputs.clear();
+      const placed = new Set();
+      const groups = RESCORE_GROUPS.map((g) => ({ ...g, keys: [...g.keys] }));
+      for (const g of groups) for (const [k] of g.keys) placed.add(k);
+      // Any server-side param we don't have a label for still gets a field.
+      const extra = Object.keys(defaults).filter((k) => !placed.has(k)).map((k) => [k, k]);
+      if (extra.length) groups.push({ title: "Other", keys: extra });
+
+      for (const group of groups) {
+        const keys = group.keys.filter(([k]) => k in defaults);
+        if (!keys.length) continue;
+        const section = document.createElement("div");
+        section.className = "rescore-group";
+        const h = document.createElement("h3");
+        h.textContent = group.title;
+        const grid = document.createElement("div");
+        grid.className = "rescore-grid";
+        for (const [key, label] of keys) {
+          const lab = document.createElement("label");
+          lab.title = key;
+          const span = document.createElement("span");
+          span.textContent = label;
+          const input = document.createElement("input");
+          input.type = "number";
+          input.step = "any";
+          input.value = defaults[key];
+          input.dataset.key = key;
+          input.addEventListener("input", () => { markRescoreState(); scheduleLoad(); });
+          rescoreInputs.set(key, input);
+          lab.append(span, input);
+          grid.appendChild(lab);
+        }
+        section.append(h, grid);
+        container.appendChild(section);
+      }
+      markRescoreState();
+    }
+
+    document.getElementById("rescore-reset").addEventListener("click", () => {
+      for (const [key, input] of rescoreInputs) input.value = rescoreDefaults[key];
+      markRescoreState();
+      loadQueue();
+    });
+
+    document.getElementById("rescore-copy").addEventListener("click", async () => {
+      const merged = { ...rescoreDefaults, ...rescoreOverrides() };
+      const text = JSON.stringify(merged, null, 2);
+      try {
+        await navigator.clipboard.writeText(text);
+        statusEl.textContent = "Copied scoring params to clipboard.";
+      } catch {
+        window.prompt("Scoring params:", text);
+      }
+    });
+
+    async function loadRescoreDefaults() {
+      try {
+        const resp = await fetch("/api/scoring-params");
+        const data = await resp.json();
+        buildRescoreForm(data.defaults || {});
+      } catch (err) {
+        errorEl.textContent = "Could not load scoring params: " + (err.message || err);
+      }
     }
 
     async function loadQueue() {
@@ -315,7 +503,8 @@
           : "unknown";
         metaEl.textContent =
           `Snapshot: ${when} · showing ${data.count} of ${data.total_in_snapshot}` +
-          (data.sql_only ? " · (sql-only refresh)" : "");
+          (data.sql_only ? " · (sql-only refresh)" : "") +
+          (data.rescored ? " · rescored with custom weights" : "");
         statusEl.textContent = rows.length ? "" : "No articles match filters.";
         render();
       } catch (err) {
@@ -341,7 +530,7 @@
       document.getElementById(id).addEventListener("change", loadQueue);
     }
 
-    loadQueue();
+    loadRescoreDefaults().then(loadQueue);
   </script>
 </body>
 </html>

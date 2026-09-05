@@ -20,6 +20,7 @@ if str(APP_DIR) not in sys.path:
     sys.path.insert(0, str(APP_DIR))
 
 from npp_config import SNAPSHOT_PATH  # noqa: E402
+from npp_score import DEFAULT_PARAMS, resolve_params, score_article  # noqa: E402
 from scoring import score_batch  # noqa: E402
 
 STATIC_DIR = APP_DIR / "static"
@@ -61,10 +62,28 @@ def score_page():
     return send_from_directory(STATIC_DIR, "score.html")
 
 
+@app.get("/api/scoring-params")
+def api_scoring_params():
+    return jsonify({"defaults": DEFAULT_PARAMS})
+
+
 @app.get("/api/queue")
 def api_queue():
     data = _load_snapshot()
     articles = list(data.get("articles") or [])
+
+    # Weight overrides arrive as w_<param>=<number>; see /api/scoring-params.
+    overrides = {
+        key[2:]: value
+        for key, value in request.args.items()
+        if key.startswith("w_") and value.strip() != ""
+    }
+    try:
+        params = resolve_params(overrides)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    if overrides:
+        articles = [score_article(a, params) for a in articles]
 
     q = (request.args.get("q") or "").strip().lower()
     min_views = request.args.get("min_views", type=float)
@@ -144,6 +163,8 @@ def api_queue():
             "total_in_snapshot": data.get("count", len(articles)),
             "sql_only": data.get("sql_only"),
             "error": data.get("error"),
+            "rescored": bool(overrides),
+            "params": params,
             "articles": filtered,
         }
     )

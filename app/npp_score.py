@@ -72,24 +72,51 @@ def page_has_violence(categories: set[str] | list[str]) -> bool:
     return any(category_is_violence(c) for c in categories)
 
 
-def pageview_points(avg_daily_views: float | int | None) -> float:
-    """Log-scaled pageview contribution, capped at WEIGHTS['pageviews_max']."""
-    views = float(avg_daily_views or 0)
-    if views <= 0:
+# Every tunable the scorer reads, flattened into one dict so callers (API/UI)
+# can override any subset. Keys mirror WEIGHTS plus the curve/age constants.
+DEFAULT_PARAMS: dict[str, float] = {
+    **WEIGHTS,
+    "pageview_log_cap": PAGEVIEW_LOG_CAP,
+    "page_len_log_cap": PAGE_LEN_LOG_CAP,
+    "stale_days": STALE_DAYS,
+}
+
+
+def resolve_params(overrides: dict[str, Any] | None = None) -> dict[str, float]:
+    """Merge *overrides* onto DEFAULT_PARAMS. Unknown keys / non-numbers raise ValueError."""
+    params = dict(DEFAULT_PARAMS)
+    for key, value in (overrides or {}).items():
+        if key not in params:
+            raise ValueError(f"unknown scoring parameter: {key}")
+        try:
+            params[key] = float(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"{key} must be a number, got {value!r}") from exc
+    return params
+
+
+def _log_points(value: float | int | None, max_pts: float, log_cap: float) -> float:
+    v = float(value or 0)
+    if v <= 0 or max_pts == 0 or log_cap <= 0:
         return 0.0
-    max_pts = WEIGHTS["pageviews_max"]
-    raw = max_pts * math.log1p(views) / math.log1p(PAGEVIEW_LOG_CAP)
-    return min(max_pts, raw)
+    raw = max_pts * math.log1p(v) / math.log1p(log_cap)
+    return min(max_pts, raw) if max_pts > 0 else max(max_pts, raw)
 
 
-def page_len_points(page_len: float | int | None) -> float:
+def pageview_points(
+    avg_daily_views: float | int | None, params: dict[str, float] | None = None
+) -> float:
+    """Log-scaled pageview contribution, capped at params['pageviews_max']."""
+    p = params or DEFAULT_PARAMS
+    return _log_points(avg_daily_views, p["pageviews_max"], p["pageview_log_cap"])
+
+
+def page_len_points(
+    page_len: float | int | None, params: dict[str, float] | None = None
+) -> float:
     """Log-scaled page-length contribution (wikitext bytes), 0–page_len_max."""
-    length = float(page_len or 0)
-    if length <= 0:
-        return 0.0
-    max_pts = WEIGHTS["page_len_max"]
-    raw = max_pts * math.log1p(length) / math.log1p(PAGE_LEN_LOG_CAP)
-    return min(max_pts, raw)
+    p = params or DEFAULT_PARAMS
+    return _log_points(page_len, p["page_len_max"], p["page_len_log_cap"])
 
 
 def parse_created_timestamp(created: Any) -> datetime | None:
@@ -116,10 +143,13 @@ def is_older_than_days(created: Any, days: int = STALE_DAYS) -> bool:
     return age.days > days
 
 
-def reference_need_points(score: float | None) -> float:
+def reference_need_points(
+    score: float | None, params: dict[str, float] | None = None
+) -> float:
     if score is None:
         return 0.0
-    return WEIGHTS["reference_need_max"] * float(score)
+    p = params or DEFAULT_PARAMS
+    return p["reference_need_max"] * float(score)
 
 
 def birth_year_from_categories(categories: set[str]) -> int | None:
@@ -130,8 +160,12 @@ def birth_year_from_categories(categories: set[str]) -> int | None:
     return None
 
 
-def score_article(row: dict[str, Any]) -> dict[str, Any]:
+def score_article(
+    row: dict[str, Any], params: dict[str, float] | None = None
+) -> dict[str, Any]:
     """Compute urgency score and factor list for one article row.
+
+    *params* is a fully resolved dict (see resolve_params); None uses defaults.
 
     Expected keys on *row* (booleans / values set by the refresh job):
       reference_need, avg_daily_views, ai_generated, chatgpt, living_person,
@@ -140,97 +174,98 @@ def score_article(row: dict[str, Any]) -> dict[str, Any]:
       disambiguation, creator_blocked, reviewer_creator, afc_accepted, pov,
       sports, violence, page_len, created
     """
+    p = params or DEFAULT_PARAMS
     factors: list[str] = []
     total = 0.0
 
     rn = row.get("reference_need")
-    rn_pts = reference_need_points(rn)
+    rn_pts = reference_need_points(rn, p)
     if rn_pts > 0:
         total += rn_pts
         factors.append(f"ref-need:{rn_pts:.1f}")
 
     views = row.get("avg_daily_views") or 0
-    pv_pts = pageview_points(views)
+    pv_pts = pageview_points(views, p)
     if pv_pts > 0:
         total += pv_pts
         factors.append(f"views:{pv_pts:.1f}")
 
-    len_pts = page_len_points(row.get("page_len"))
+    len_pts = page_len_points(row.get("page_len"), p)
     if len_pts > 0:
         total += len_pts
         factors.append(f"len:{len_pts:.1f}")
 
-    if is_older_than_days(row.get("created")):
-        total += WEIGHTS["older_than_90d"]
+    if is_older_than_days(row.get("created"), int(p["stale_days"])):
+        total += p["older_than_90d"]
         factors.append("old")
 
     if row.get("ai_generated"):
-        total += WEIGHTS["ai_generated"]
+        total += p["ai_generated"]
         factors.append("ai")
 
     if row.get("chatgpt"):
-        total += WEIGHTS["chatgpt"]
+        total += p["chatgpt"]
         factors.append("chatgpt")
 
     if row.get("is_minor"):
-        total += WEIGHTS["minor_blp"]
+        total += p["minor_blp"]
         factors.append("minor")
 
     if row.get("living_person"):
-        total += WEIGHTS["living_person"]
+        total += p["living_person"]
         factors.append("blp")
 
     if row.get("ctop"):
-        total += WEIGHTS["ctop"]
+        total += p["ctop"]
         labels = row.get("ctop_labels") or []
         label = ",".join(labels) if labels else "ctop"
         factors.append(f"ctop:{label}" if labels else "ctop")
 
     if row.get("notability"):
-        total += WEIGHTS["notability"]
+        total += p["notability"]
         factors.append("notability")
 
     if row.get("coi"):
-        total += WEIGHTS["coi"]
+        total += p["coi"]
         factors.append("coi")
 
     if row.get("promotional"):
-        total += WEIGHTS["promotional"]
+        total += p["promotional"]
         factors.append("promotional")
 
     if row.get("orphan_links"):
-        total += WEIGHTS["orphan_links"]
+        total += p["orphan_links"]
         factors.append("orphan")
     elif row.get("orphan_category"):
-        total += WEIGHTS["orphan_category_only"]
+        total += p["orphan_category_only"]
         factors.append("orphan-cat")
 
     if row.get("disambiguation"):
-        total += WEIGHTS["disambiguation"]
+        total += p["disambiguation"]
         factors.append("disambig")
 
     if row.get("creator_blocked"):
-        total += WEIGHTS["creator_blocked"]
+        total += p["creator_blocked"]
         factors.append("blocked-creator")
 
     if row.get("reviewer_creator"):
-        total += WEIGHTS["reviewer_creator"]
+        total += p["reviewer_creator"]
         factors.append("reviewer-creator")
 
     if row.get("afc_accepted"):
-        total += WEIGHTS["afc_accepted"]
+        total += p["afc_accepted"]
         factors.append("AfC")
 
     if row.get("pov"):
-        total += WEIGHTS["pov"]
+        total += p["pov"]
         factors.append("pov")
 
     if row.get("sports") or row.get("athlete"):
-        total += WEIGHTS["sports"]
+        total += p["sports"]
         factors.append("sports")
 
     if row.get("violence"):
-        total += WEIGHTS["violence"]
+        total += p["violence"]
         factors.append("violence")
 
     out = dict(row)

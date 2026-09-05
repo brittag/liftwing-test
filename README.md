@@ -60,6 +60,13 @@ NPR/AfC reviewer creators (−10), accepted AfC submissions (−10; talk page in
 `Films_*`), sports (−5; sportspeople/players plus tennis/football/soccer/
 handball/sailing); disambiguation pages get a −20 penalty.
 
+In the queue UI, the **Rescore** zippy exposes every one of these weights
+(plus the pageview/page-length log caps and stale-day threshold) as editable
+fields. Editing one re-ranks the snapshot live; "Reset to defaults" restores
+the snapshot's scores and "Copy as JSON" copies the current parameter set for
+pasting into `npp_config.py`. Under the hood this hits
+`GET /api/queue?w_<param>=<number>` (defaults from `GET /api/scoring-params`).
+
 CTOP article-side matching uses a precomputed subcategory list (tight roots
 only). Rebuild it with:
 
