@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Projo · Articles to improve</title>
+  <title>Projo · Tone check</title>
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -148,16 +148,24 @@
       <p class="tagline">Sort articles to find task targets with high impact for readers.</p>
     </div>
     <nav class="tabs" aria-label="Tools">
-      <a href="/" aria-current="page">Articles to improve</a>
+      <a href="/">Articles to improve</a>
       <a href="/review">Articles to review</a>
+      <a href="/tone" aria-current="page">Tone Check</a>
     </nav>
   </header>
 
-  <h1>Articles to improve</h1>
+  <h1>Tone Check</h1>
   <p class="hint">
-    Paste Wikipedia article titles (one per line). Scores the latest revision’s
-    reference need (higher = more citation-needing sentences still lack cites)
-    and counts paragraphs with Tone Check probability ≥ 0.80 (first 40 paragraphs).
+    <a href="https://en.wikipedia.org/wiki/Wikipedia:Edit_check/Tone_Check">Tone Check</a>
+    detects the presence of promotional, derogatory, or otherwise subjective language. It's the core of
+    the <a href="https://www.mediawiki.org/wiki/Growth/Revise_Tone">Revise Tone</a> task that is presented
+    to newcomers and to users of <a href="https://www.mediawiki.org/wiki/VisualEditor/Suggestion_Mode">Suggestion Mode</a>.
+    Can we also use it to predict which articles in a long list have the most tone problems,
+    even if they're not tagged as having issues? Let's try it!
+  </p>
+  <p class="hint">
+    Paste Wikipedia article titles (one per line) to count paragraphs with
+    Tone Check probability ≥ 0.80 (first 40 paragraphs). This is slow, so it's separate from the other sorting and ranking tools.
   </p>
 
   <form id="form">
@@ -179,7 +187,6 @@
     <thead>
       <tr>
         <th id="sort-title" class="sortable" title="Click to reverse sort">Title ↕</th>
-        <th id="sort-need" class="sortable" title="Click to reverse sort">Reference need ↕</th>
         <th id="sort-tone" class="sortable" title="Click to reverse sort">Tone flags ↕</th>
       </tr>
     </thead>
@@ -196,17 +203,11 @@
     const table = document.getElementById("results");
     const tbody = table.querySelector("tbody");
     const sortTitle = document.getElementById("sort-title");
-    const sortNeed = document.getElementById("sort-need");
     const sortTone = document.getElementById("sort-tone");
 
     let rows = [];
-    let sortKey = "need";
+    let sortKey = "tone";
     let sortDesc = true;
-
-    function fmtScore(v) {
-      if (v === null || v === undefined) return "—";
-      return (Number(v) * 100).toFixed(1) + "%";
-    }
 
     function compareRows(a, b) {
       if (sortKey === "title") {
@@ -215,9 +216,8 @@
         });
         return sortDesc ? -cmp : cmp;
       }
-      const field = sortKey === "tone" ? "tone_flagged_count" : "reference_need";
-      const av = a[field];
-      const bv = b[field];
+      const av = a.tone_flagged_count;
+      const bv = b.tone_flagged_count;
       if (av == null && bv == null) return 0;
       if (av == null) return 1;
       if (bv == null) return -1;
@@ -248,10 +248,6 @@
           titleCell.appendChild(err);
         }
 
-        const need = document.createElement("td");
-        need.className = "num";
-        need.textContent = fmtScore(r.reference_need);
-
         const tone = document.createElement("td");
         tone.className = "num";
         tone.textContent =
@@ -259,19 +255,13 @@
             ? "—"
             : String(r.tone_flagged_count);
 
-        tr.append(titleCell, need, tone);
+        tr.append(titleCell, tone);
         tbody.appendChild(tr);
       }
 
       table.classList.remove("hidden");
       sortTitle.textContent =
         sortKey === "title" ? (sortDesc ? "Title ↓" : "Title ↑") : "Title ↕";
-      sortNeed.textContent =
-        sortKey === "need"
-          ? sortDesc
-            ? "Reference need ↓"
-            : "Reference need ↑"
-          : "Reference need ↕";
       sortTone.textContent =
         sortKey === "tone"
           ? sortDesc
@@ -291,7 +281,6 @@
     }
 
     sortTitle.addEventListener("click", () => setSort("title"));
-    sortNeed.addEventListener("click", () => setSort("need"));
     sortTone.addEventListener("click", () => setSort("tone"));
 
     form.addEventListener("submit", async (e) => {
@@ -318,7 +307,7 @@
           throw new Error(data.error || "Request failed");
         }
         rows = data.results || [];
-        sortKey = "need";
+        sortKey = "tone";
         sortDesc = true;
         statusEl.textContent = `Scored ${rows.length} article(s).`;
         render();

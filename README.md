@@ -1,9 +1,10 @@
 # Projo
 
-Flask prototype with two tools:
+Flask prototype with three tools:
 
-1. **Articles to improve** (`/`) — paste titles for on-demand reference-need + tone check
-2. **Articles to review** (`/review`) — ranked list of unreviewed English Wikipedia articles
+1. **Articles to improve** (`/`) — placeholder for a future ranking tool
+2. **Tone check** (`/tone`) — paste titles for on-demand tone-check flag counts
+3. **Articles to review** (`/review`) — ranked list of unreviewed English Wikipedia articles
 
 ## Setup
 
@@ -80,5 +81,6 @@ python scripts/fetch_npp_afc_reviewers.py
 python app/app.py
 ```
 
-Open http://localhost:8765 for Articles to improve, or
+Open http://localhost:8765 for Articles to improve,
+http://localhost:8765/tone for Tone check, or
 http://localhost:8765/review for Articles to review.

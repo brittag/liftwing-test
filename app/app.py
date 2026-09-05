@@ -1,7 +1,8 @@
-"""Projo — Articles to improve (paste-titles scorer) + Articles to review (NPP queue).
+"""Projo — Articles to improve (placeholder), Tone check, Articles to review.
 
 Run: python app/app.py
 Open: http://localhost:8765         (Articles to improve)
+      http://localhost:8765/tone    (Tone check)
       http://localhost:8765/review  (Articles to review)
 """
 
@@ -92,6 +93,11 @@ def _sort_articles(articles: list[dict], sort: str, descending: bool) -> list[di
 
 @app.get("/")
 def index():
+    return send_from_directory(STATIC_DIR, "home.html")
+
+
+@app.get("/tone")
+def tone_page():
     return send_from_directory(STATIC_DIR, "score.html")
 
 
@@ -103,7 +109,7 @@ def review_page():
 @app.get("/score")
 def score_page_redirect():
     """Keep old /score bookmarks working."""
-    return redirect("/", code=301)
+    return redirect("/tone", code=301)
 
 
 @app.get("/api/queue")

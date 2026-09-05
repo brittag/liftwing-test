@@ -1,7 +1,7 @@
 """Reusable Wikipedia Lift Wing scoring helpers (no Flask dependency).
 
-Fetches the latest revision for a page title, scores reference-need, and
-counts Tone Check flags on article paragraphs.
+Fetches the latest revision for a page title, scores reference-need (used by
+the review queue), and counts Tone Check flags on article paragraphs.
 """
 
 from __future__ import annotations
@@ -27,8 +27,6 @@ TONE_THRESHOLD = 0.80
 MAX_TONE_PARAGRAPHS = 40
 EDIT_CHECK_BATCH = 20
 MIN_PARAGRAPH_CHARS = 40
-# Temporarily skip Reference Need Lift Wing calls (set True to re-enable).
-ENABLE_REFERENCE_NEED = True
 # Generic fallback only — set WIKIMEDIA_USER_AGENT in .env for real API use.
 DEFAULT_USER_AGENT = (
     "ReferenceNeedPrototype/0.1 "
@@ -178,7 +176,6 @@ def score_article(
         "title": title.strip(),
         "wikipedia_url": None,
         "revision_id": None,
-        "reference_need": None,
         "tone_flagged_count": None,
         "error": None,
     }
@@ -191,8 +188,6 @@ def score_article(
         row["wikipedia_url"] = (
             f"https://{lang}.wikipedia.org/wiki/{quote(_normalize_title(display_title), safe=':_()/')}"
         )
-        if ENABLE_REFERENCE_NEED:
-            row["reference_need"] = score_reference_need(session, rev_id, lang)
 
         extract = fetch_plaintext_extract(session, display_title, lang)
         paragraphs = split_paragraphs(extract)
