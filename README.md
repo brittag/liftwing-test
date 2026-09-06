@@ -1,10 +1,11 @@
 # Projo
 
-Flask prototype with three tools:
+Flask prototype with four tools:
 
 1. **Articles to improve** (`/`) — placeholder for a future ranking tool
-2. **Tone check** (`/tone`) — paste titles for on-demand tone-check flag counts
+2. **Tone Checker** (`/tone`) — paste titles for on-demand tone-check flag counts
 3. **Articles to review** (`/review`) — ranked list of unreviewed English Wikipedia articles
+4. **Orphan linker** (`/orphan`) — placeholder for a future linking tool
 
 ## Setup
 
@@ -82,5 +83,6 @@ python app/app.py
 ```
 
 Open http://localhost:8765 for Articles to improve,
-http://localhost:8765/tone for Tone check, or
-http://localhost:8765/review for Articles to review.
+http://localhost:8765/tone for Tone Checker,
+http://localhost:8765/review for Articles to review, or
+http://localhost:8765/orphan for Orphan linker.

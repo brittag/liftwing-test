@@ -1,9 +1,10 @@
-"""Projo — Articles to improve (placeholder), Tone check, Articles to review.
+"""Projo — Articles to improve (placeholder), Tone Checker, Articles to review, Orphan linker.
 
 Run: python app/app.py
 Open: http://localhost:8765         (Articles to improve)
-      http://localhost:8765/tone    (Tone check)
+      http://localhost:8765/tone    (Tone Checker)
       http://localhost:8765/review  (Articles to review)
+      http://localhost:8765/orphan  (Orphan linker)
 """
 
 from __future__ import annotations
@@ -104,6 +105,11 @@ def tone_page():
 @app.get("/review")
 def review_page():
     return send_from_directory(STATIC_DIR, "review.html")
+
+
+@app.get("/orphan")
+def orphan_page():
+    return send_from_directory(STATIC_DIR, "orphan.html")
 
 
 @app.get("/score")

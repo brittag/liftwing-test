@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Projo · Tone check</title>
+  <title>Projo · Tone checker</title>
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -27,9 +27,6 @@
       column-gap: 0.7rem;
       row-gap: 0.45rem;
       align-items: center;
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid #ddd;
     }
     .logo-link {
       grid-column: 1;
@@ -150,11 +147,13 @@
     <nav class="tabs" aria-label="Tools">
       <a href="/">Articles to improve</a>
       <a href="/review">Articles to review</a>
-      <a href="/tone" aria-current="page">Tone Check</a>
+      <a href="/tone" aria-current="page">Tone checker</a>
+      <a href="/orphan">Orphan linker</a>
     </nav>
   </header>
+  <hr/>
 
-  <h1>Tone Check</h1>
+  <h1>Tone checker</h1>
   <p class="hint">
     <a href="https://en.wikipedia.org/wiki/Wikipedia:Edit_check/Tone_Check">Tone Check</a>
     detects the presence of promotional, derogatory, or otherwise subjective language. It's the core of
@@ -165,7 +164,8 @@
   </p>
   <p class="hint">
     Paste Wikipedia article titles (one per line) to count paragraphs with
-    Tone Check probability ≥ 0.80 (first 40 paragraphs). This is slow, so it's separate from the other sorting and ranking tools.
+    Tone Check probability ≥ 0.80 (first 40 paragraphs). This is slow, so
+    it's separate from the other sorting and ranking tools. You can check up to 100 articles at a time.
   </p>
 
   <form id="form">
@@ -321,6 +321,14 @@
   </script>
 
   <hr/>
-  <p><small>Code repository: <a href="https://gitlab.wikimedia.org/tmoney/projo" target="_blank">Projo on GitLab</a>. Made by <a href="https://en.wikipedia.org/wiki/User:Audiodude" target="_blank">Audiodude</a> and <a href="https://en.wikipedia.org/wiki/User:Dreamyshade" target="_blank">Dreamyshade</a>.</small></p>
+  <p>
+     <small>
+       Code repository: <a href="https://gitlab.wikimedia.org/tmoney/projo" target="_blank">Projo on GitLab</a>.
+       Made by <a href="https://en.wikipedia.org/wiki/User:Audiodude" target="_blank">Audiodude</a> and
+       <a href="https://en.wikipedia.org/wiki/User:Dreamyshade" target="_blank">Dreamyshade</a>.
+       The owls: <a href="https://commons.wikimedia.org/wiki/File:Travels_in_Europe_and_Northern_Africa_(1901)_-_illustration_-_page_16.png">1901 woodcut</a>
+       and <a href="https://commons.wikimedia.org/wiki/File:Owl_(25818)_-_The_Noun_Project.svg">Noun Project icon</a>.
+     </small>
+   </p>
 </body>
 </html>
