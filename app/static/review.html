@@ -93,6 +93,26 @@
       pointer-events: none;
     }
     h1 { font-size: 1.35rem; margin-bottom: 0.25rem; }
+    .page-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .page-heading h1 { margin: 0; }
+    button.chill-mode {
+      flex-shrink: 0;
+      background: #eefaf2;
+      border: 1px solid #2a7;
+      color: #14633a;
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: 4px;
+    }
+    button.chill-mode[aria-pressed="true"] {
+      background: #2a7;
+      color: #fff;
+    }
     .hint { color: #555; font-size: 0.9rem; margin-bottom: 1rem; }
     .meta { color: #555; font-size: 0.85rem; margin: 0.5rem 0 0.25rem; }
     .filters {
@@ -222,7 +242,10 @@
   </header>
   <hr/>
 
-  <h1>Articles to review</h1>
+  <div class="page-heading">
+    <h1>Articles to review</h1>
+    <button type="button" id="chill-mode" class="chill-mode" aria-pressed="false">Chill mode</button>
+  </div>
   <p class="hint">
     For <a href="https://en.wikipedia.org/wiki/Wikipedia:New_pages_patrol">new page reviewers</a> for English Wikipedia:
     find the unreviewed articles that most need review.
@@ -541,6 +564,7 @@
 
       table.classList.toggle("hidden", rows.length === 0);
       setSortHeaders();
+      syncChillButton();
       renderPagers();
     }
 
@@ -568,6 +592,22 @@
       }
     }
 
+    function chillModeActive() {
+      return sortKey === "score" && !sortDesc;
+    }
+
+    function syncChillButton() {
+      document
+        .getElementById("chill-mode")
+        .setAttribute("aria-pressed", chillModeActive() ? "true" : "false");
+    }
+
+    function setChillMode(on) {
+      sortKey = "score";
+      sortDesc = !on; // on → asc (lowest first); off → desc
+      loadFromStart();
+    }
+
     function setSort(key) {
       if (sortKey === key) {
         sortDesc = !sortDesc;
@@ -578,6 +618,10 @@
       currentPage = 1;
       loadQueue();
     }
+
+    document.getElementById("chill-mode").addEventListener("click", () => {
+      setChillMode(!chillModeActive());
+    });
 
     document.getElementById("sort-score").addEventListener("click", () => setSort("score"));
     document.getElementById("sort-title").addEventListener("click", () => setSort("title"));
@@ -643,12 +687,15 @@
         const when = data.generated_at
           ? new Date(data.generated_at).toLocaleString()
           : "unknown";
+        const pruned = data.last_prune_at
+          ? ` · last prune ${new Date(data.last_prune_at).toLocaleString()}`
+          : "";
         const range =
           filteredCount === 0
             ? `0 of ${data.total_in_snapshot}`
             : `${from.toLocaleString()}–${to.toLocaleString()} of ${filteredCount.toLocaleString()} matching · ${Number(data.total_in_snapshot).toLocaleString()} in snapshot`;
         metaEl.textContent =
-          `Snapshot: ${when} · showing ${range}`;
+          `Snapshot: ${when}${pruned} · showing ${range}`;
         statusEl.textContent = rows.length ? "" : "No articles match filters.";
         render();
       } catch (err) {

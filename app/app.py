@@ -39,21 +39,41 @@ SORT_FIELDS = {
 
 app = Flask(__name__, static_folder=str(STATIC_DIR), static_url_path="")
 
+_snapshot_cache: dict | None = None
+_snapshot_mtime: float | None = None
+
+
+def _missing_snapshot() -> dict:
+    return {
+        "generated_at": None,
+        "lang": "en",
+        "count": 0,
+        "articles": [],
+        "last_prune_at": None,
+        "last_ingest_at": None,
+        "last_refresh_at": None,
+        "error": (
+            f"No snapshot at {SNAPSHOT_PATH}. "
+            "Run: python scripts/refresh_npp_queue.py"
+        ),
+    }
+
 
 def _load_snapshot() -> dict:
+    """Parse npp_queue.json, reloading only when the file mtime changes."""
+    global _snapshot_cache, _snapshot_mtime
     if not SNAPSHOT_FILE.exists():
-        return {
-            "generated_at": None,
-            "lang": "en",
-            "count": 0,
-            "articles": [],
-            "error": (
-                f"No snapshot at {SNAPSHOT_PATH}. "
-                "Run: python scripts/refresh_npp_queue.py"
-            ),
-        }
+        _snapshot_cache = None
+        _snapshot_mtime = None
+        return _missing_snapshot()
+    mtime = SNAPSHOT_FILE.stat().st_mtime
+    if _snapshot_cache is not None and _snapshot_mtime == mtime:
+        return _snapshot_cache
     with SNAPSHOT_FILE.open(encoding="utf-8") as fh:
-        return json.load(fh)
+        data = json.load(fh)
+    _snapshot_cache = data
+    _snapshot_mtime = mtime
+    return data
 
 
 def _truthy(value: str | None) -> bool:
@@ -209,6 +229,9 @@ def api_queue():
     return jsonify(
         {
             "generated_at": data.get("generated_at"),
+            "last_prune_at": data.get("last_prune_at"),
+            "last_ingest_at": data.get("last_ingest_at"),
+            "last_refresh_at": data.get("last_refresh_at"),
             "lang": data.get("lang", "en"),
             "count": total,
             "page": page,

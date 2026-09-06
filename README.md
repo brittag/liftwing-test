@@ -19,10 +19,22 @@ cp .env.example .env
 
 ## Refresh the queue snapshot
 
-The UI reads `data/npp_queue.json`. Build or update it with the refresh job
-(requires an SSH tunnel to the enwiki analytics replica).
+The UI reads `data/npp_queue.json`. On Toolforge this file is kept current by
+three scheduled jobs (see `jobs.yaml` — load later with
+`toolforge jobs load jobs.yaml`, not done yet):
 
-**1. Open the tunnel** (leave this running):
+| Cadence | Command | What it does |
+|---------|---------|----------------|
+| Hourly | `--mode prune` | Drop pages that have been reviewed, deleted, redirected, or left PageTriage |
+| Daily | `--mode ingest` | Prune, then add up to 2000 newest unreviewed pages not already in the snapshot |
+| Weekly | `--mode refresh-existing` | Re-scan SQL flags for remaining pages; Lift Wing / ChatGPT only if the revision changed; refresh pageviews and creator blocks |
+
+Ingest and weekly **do not** re-score the whole backlog on every run. Existing
+rows keep cached `reference_need` until their `revision_id` changes.
+
+**Locally**, open an SSH tunnel to the enwiki analytics replica first (leave it
+running). On Toolforge, jobs connect to the replica directly (`replica.my.cnf`
+or `TOOL_REPLICA_USER` / `TOOL_REPLICA_PASSWORD`).
 
 ```bash
 ssh -L ${TOOLFORGE_DB_PORT:-3307}:enwiki.analytics.db.svc.wikimedia.cloud:3306 \
@@ -31,22 +43,18 @@ ssh -L ${TOOLFORGE_DB_PORT:-3307}:enwiki.analytics.db.svc.wikimedia.cloud:3306 \
 
 Or use the helper from the database skill if you have it wired up.
 
-**2. Run the refresh:**
-
 ```bash
-# No SQL yet? Test 50 unreviewed pages via public APIs + Lift Wing:
+# Cadence jobs (same as Toolforge; need the replica)
+python scripts/refresh_npp_queue.py --mode prune
+python scripts/refresh_npp_queue.py --mode ingest            # newest 2000
+python scripts/refresh_npp_queue.py --mode ingest --limit 50
+python scripts/refresh_npp_queue.py --mode refresh-existing --sql-only
+
+# One-shot / local testing
 python scripts/refresh_npp_queue.py --api --limit 50
-
-# With replica tunnel + .env — same test via SQL:
 python scripts/refresh_npp_queue.py --limit 50
-
-# SQL flags only (reuse cached reference_need; minutes for full backlog)
 python scripts/refresh_npp_queue.py --sql-only
-
-# Add 500 oldest unreviewed pages into the existing snapshot (no replacements)
 python scripts/refresh_npp_queue.py --sql-only --oldest --merge --limit 500
-
-# Fill/refresh pageviews via REST API (day-cached; page_props is unused on replicas)
 python scripts/refresh_npp_queue.py --refresh-pageviews
 
 # Full backlog (first Lift Wing pass is slow — ~8 hours at 1s throttle)
