@@ -24,7 +24,7 @@ LIFTWING_BASE = "https://api.wikimedia.org/service/lw/inference/v1/models"
 MIN_INTERVAL = 1.0
 MAX_BATCH_SIZE = 100
 TONE_THRESHOLD = 0.80
-MAX_TONE_PARAGRAPHS = 40
+MAX_TONE_PARAGRAPHS = 20
 EDIT_CHECK_BATCH = 20
 MIN_PARAGRAPH_CHARS = 40
 # Generic fallback only — set WIKIMEDIA_USER_AGENT in .env for real API use.
