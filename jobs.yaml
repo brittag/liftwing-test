@@ -1,0 +1,38 @@
+# Toolforge jobs for the NPP queue snapshot.
+# Assumes this repo is the tool home with a venv/ at the root.
+# Load later (not done automatically):  toolforge jobs load jobs.yaml
+#
+# Jobs must mount NFS (mount: all) so they can read/write data/npp_queue.json.
+# @hourly / @daily / @weekly are jittered by Toolforge — check `toolforge jobs list`.
+
+- name: npp-prune
+  command: venv/bin/python3 scripts/refresh_npp_queue.py --mode prune
+  image: python3.11
+  schedule: "@hourly"
+  mount: all
+  emails: onfailure
+  timeout: 1800
+  mem: 1Gi
+  cpu: 1
+
+- name: npp-ingest
+  command: venv/bin/python3 scripts/refresh_npp_queue.py --mode ingest
+  image: python3.11
+  schedule: "@daily"
+  mount: all
+  emails: onfailure
+  timeout: 7200
+  mem: 2Gi
+  cpu: 1
+
+- name: npp-refresh
+  command: >-
+    sh -c 'venv/bin/python3 scripts/fetch_npp_afc_reviewers.py;
+    venv/bin/python3 scripts/refresh_npp_queue.py --mode refresh-existing'
+  image: python3.11
+  schedule: "@weekly"
+  mount: all
+  emails: onfailure
+  timeout: 14400
+  mem: 2Gi
+  cpu: 1

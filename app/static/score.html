@@ -3,10 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Reference Need + Tone Check Prototype</title>
+  <title>Projo · Tone checker</title>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
   <style>
     :root {
-      font-family: system-ui, sans-serif;
+      font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
       color: #1a1a1a;
       line-height: 1.4;
     }
@@ -15,10 +20,80 @@
       margin: 1.5rem auto;
       padding: 0 1rem;
     }
+    .site-header {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      column-gap: 0.7rem;
+      row-gap: 0.45rem;
+      align-items: center;
+    }
+    .logo-link {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-self: stretch;
+      height: 0;
+      min-height: 100%;
+      display: flex;
+    }
+    .logo {
+      height: 100%;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+    .brand {
+      color: inherit;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+    }
+    .brand-row {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.35rem 1rem;
+      min-width: 0;
+    }
+    .tagline {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #555;
+      line-height: 1.3;
+    }
+    .tabs {
+      grid-column: 2;
+      grid-row: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+    .tabs a {
+      color: #0645ad;
+      text-decoration: none;
+      padding: 0.2rem 0.65rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      line-height: 1.25;
+    }
+    .tabs a:hover { background: #f0f0f0; }
+    .tabs a[aria-current="page"] {
+      color: #1a1a1a;
+      font-weight: 600;
+      background: #eee;
+      border-color: transparent;
+      pointer-events: none;
+    }
     h1 { font-size: 1.35rem; margin-bottom: 0.25rem; }
     .hint { color: #555; font-size: 0.9rem; margin-bottom: 1rem; }
-    .nav { margin-bottom: 1rem; font-size: 0.9rem; }
-    .nav a { color: #0645ad; }
     label { display: block; font-weight: 600; margin: 0.75rem 0 0.25rem; }
     textarea {
       width: 100%;
@@ -61,12 +136,36 @@
   </style>
 </head>
 <body>
-  <p class="nav"><a href="/">← NPP urgency queue</a></p>
-  <h1>Reference Need + Tone Check Prototype</h1>
+  <header class="site-header">
+    <a class="logo-link" href="/" aria-label="Projo home">
+      <img class="logo" src="/owl.png" alt="" width="305" height="511" />
+    </a>
+    <div class="brand-row">
+      <a class="brand" href="/">Projo</a>
+      <p class="tagline">Sort articles to find task targets with high impact for readers.</p>
+    </div>
+    <nav class="tabs" aria-label="Tools">
+      <a href="/">Articles to improve</a>
+      <a href="/review">Articles to review</a>
+      <a href="/tone" aria-current="page">Tone checker</a>
+      <a href="/orphan">Orphan linker</a>
+    </nav>
+  </header>
+  <hr/>
+
+  <h1>Tone checker</h1>
   <p class="hint">
-    Paste Wikipedia article titles (one per line). Scores the latest revision’s
-    reference need (higher = more citation-needing sentences still lack cites)
-    and counts paragraphs with Tone Check probability ≥ 0.80 (first 40 paragraphs).
+    <a href="https://en.wikipedia.org/wiki/Wikipedia:Edit_check/Tone_Check">Tone Check</a>
+    detects the presence of promotional, derogatory, or otherwise subjective language. It's the core of
+    the <a href="https://www.mediawiki.org/wiki/Growth/Revise_Tone">Revise Tone</a> task that is presented
+    to newcomers and to users of <a href="https://www.mediawiki.org/wiki/VisualEditor/Suggestion_Mode">Suggestion Mode</a>.
+    Can we also use it to predict which articles in a long list have the most tone problems,
+    even if they're not tagged as having issues? Let's try it!
+  </p>
+  <p class="hint">
+    Paste Wikipedia article titles (one per line) to count paragraphs with
+    Tone Check probability ≥ 0.80 (first 20 paragraphs). This is slow, so
+    it's separate from the other sorting and ranking tools. You can check up to 100 articles at a time.
   </p>
 
   <form id="form">
@@ -88,7 +187,6 @@
     <thead>
       <tr>
         <th id="sort-title" class="sortable" title="Click to reverse sort">Title ↕</th>
-        <th id="sort-need" class="sortable" title="Click to reverse sort">Reference need ↕</th>
         <th id="sort-tone" class="sortable" title="Click to reverse sort">Tone flags ↕</th>
       </tr>
     </thead>
@@ -105,17 +203,11 @@
     const table = document.getElementById("results");
     const tbody = table.querySelector("tbody");
     const sortTitle = document.getElementById("sort-title");
-    const sortNeed = document.getElementById("sort-need");
     const sortTone = document.getElementById("sort-tone");
 
     let rows = [];
-    let sortKey = "need";
+    let sortKey = "tone";
     let sortDesc = true;
-
-    function fmtScore(v) {
-      if (v === null || v === undefined) return "—";
-      return (Number(v) * 100).toFixed(1) + "%";
-    }
 
     function compareRows(a, b) {
       if (sortKey === "title") {
@@ -124,9 +216,8 @@
         });
         return sortDesc ? -cmp : cmp;
       }
-      const field = sortKey === "tone" ? "tone_flagged_count" : "reference_need";
-      const av = a[field];
-      const bv = b[field];
+      const av = a.tone_flagged_count;
+      const bv = b.tone_flagged_count;
       if (av == null && bv == null) return 0;
       if (av == null) return 1;
       if (bv == null) return -1;
@@ -157,10 +248,6 @@
           titleCell.appendChild(err);
         }
 
-        const need = document.createElement("td");
-        need.className = "num";
-        need.textContent = fmtScore(r.reference_need);
-
         const tone = document.createElement("td");
         tone.className = "num";
         tone.textContent =
@@ -168,19 +255,13 @@
             ? "—"
             : String(r.tone_flagged_count);
 
-        tr.append(titleCell, need, tone);
+        tr.append(titleCell, tone);
         tbody.appendChild(tr);
       }
 
       table.classList.remove("hidden");
       sortTitle.textContent =
         sortKey === "title" ? (sortDesc ? "Title ↓" : "Title ↑") : "Title ↕";
-      sortNeed.textContent =
-        sortKey === "need"
-          ? sortDesc
-            ? "Reference need ↓"
-            : "Reference need ↑"
-          : "Reference need ↕";
       sortTone.textContent =
         sortKey === "tone"
           ? sortDesc
@@ -200,7 +281,6 @@
     }
 
     sortTitle.addEventListener("click", () => setSort("title"));
-    sortNeed.addEventListener("click", () => setSort("need"));
     sortTone.addEventListener("click", () => setSort("tone"));
 
     form.addEventListener("submit", async (e) => {
@@ -227,7 +307,7 @@
           throw new Error(data.error || "Request failed");
         }
         rows = data.results || [];
-        sortKey = "need";
+        sortKey = "tone";
         sortDesc = true;
         statusEl.textContent = `Scored ${rows.length} article(s).`;
         render();
@@ -239,5 +319,16 @@
       }
     });
   </script>
+
+  <hr/>
+  <p>
+     <small>
+       Code repository: <a href="https://gitlab.wikimedia.org/tmoney/projo" target="_blank">Projo on GitLab</a>.
+       Made by <a href="https://en.wikipedia.org/wiki/User:Audiodude" target="_blank">Audiodude</a> and
+       <a href="https://en.wikipedia.org/wiki/User:Dreamyshade" target="_blank">Dreamyshade</a>.
+       The owls: <a href="https://commons.wikimedia.org/wiki/File:Travels_in_Europe_and_Northern_Africa_(1901)_-_illustration_-_page_16.png">1901 woodcut</a>
+       and <a href="https://commons.wikimedia.org/wiki/File:Owl_(25818)_-_The_Noun_Project.svg">Noun Project icon</a>.
+     </small>
+   </p>
 </body>
 </html>

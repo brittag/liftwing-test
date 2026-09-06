@@ -1,18 +1,21 @@
-"""NPP urgency queue + Reference Need / Tone Check prototype.
+"""Projo — Articles to improve (placeholder), Tone Checker, Articles to review, Orphan linker.
 
 Run: python app/app.py
-Open: http://localhost:8765  (ranked queue)
-      http://localhost:8765/score  (paste-titles scorer)
+Open: http://localhost:8765         (Articles to improve)
+      http://localhost:8765/tone    (Tone Checker)
+      http://localhost:8765/review  (Articles to review)
+      http://localhost:8765/orphan  (Orphan linker)
 """
 
 from __future__ import annotations
 
 import json
+import math
 import os
 import sys
 from pathlib import Path
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, redirect, request, send_from_directory
 
 APP_DIR = Path(__file__).resolve().parent
 ROOT = APP_DIR.parent
@@ -26,24 +29,52 @@ from scoring import score_batch  # noqa: E402
 STATIC_DIR = APP_DIR / "static"
 PORT = int(os.environ.get("PORT", "8765"))
 SNAPSHOT_FILE = ROOT / SNAPSHOT_PATH
+PAGE_SIZE = 2000
+SORT_FIELDS = {
+    "score": "score",
+    "title": "title",
+    "created": "created",
+    "views": "avg_daily_views",
+    "need": "reference_need",
+}
 
 app = Flask(__name__, static_folder=str(STATIC_DIR), static_url_path="")
 
+_snapshot_cache: dict | None = None
+_snapshot_mtime: float | None = None
+
+
+def _missing_snapshot() -> dict:
+    return {
+        "generated_at": None,
+        "lang": "en",
+        "count": 0,
+        "articles": [],
+        "last_prune_at": None,
+        "last_ingest_at": None,
+        "last_refresh_at": None,
+        "error": (
+            f"No snapshot at {SNAPSHOT_PATH}. "
+            "Run: python scripts/refresh_npp_queue.py"
+        ),
+    }
+
 
 def _load_snapshot() -> dict:
+    """Parse npp_queue.json, reloading only when the file mtime changes."""
+    global _snapshot_cache, _snapshot_mtime
     if not SNAPSHOT_FILE.exists():
-        return {
-            "generated_at": None,
-            "lang": "en",
-            "count": 0,
-            "articles": [],
-            "error": (
-                f"No snapshot at {SNAPSHOT_PATH}. "
-                "Run: python scripts/refresh_npp_queue.py"
-            ),
-        }
+        _snapshot_cache = None
+        _snapshot_mtime = None
+        return _missing_snapshot()
+    mtime = SNAPSHOT_FILE.stat().st_mtime
+    if _snapshot_cache is not None and _snapshot_mtime == mtime:
+        return _snapshot_cache
     with SNAPSHOT_FILE.open(encoding="utf-8") as fh:
-        return json.load(fh)
+        data = json.load(fh)
+    _snapshot_cache = data
+    _snapshot_mtime = mtime
+    return data
 
 
 def _truthy(value: str | None) -> bool:
@@ -52,14 +83,60 @@ def _truthy(value: str | None) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _created_sort_value(created: object) -> float | None:
+    text = str(created or "").strip()
+    digits = text[:14]
+    if len(digits) < 14 or not digits.isdigit():
+        return None
+    return float(digits)
+
+
+def _sort_articles(articles: list[dict], sort: str, descending: bool) -> list[dict]:
+    field = SORT_FIELDS.get(sort, "score")
+    if field == "title":
+        return sorted(
+            articles,
+            key=lambda a: (a.get("title") or "").casefold(),
+            reverse=descending,
+        )
+
+    def key(article: dict) -> tuple[int, float]:
+        if field == "created":
+            numeric = _created_sort_value(article.get("created"))
+        else:
+            val = article.get(field)
+            numeric = None if val is None else float(val)
+        if numeric is None:
+            return (1, 0.0)
+        return (0, -numeric if descending else numeric)
+
+    return sorted(articles, key=key)
+
+
 @app.get("/")
 def index():
-    return send_from_directory(STATIC_DIR, "index.html")
+    return send_from_directory(STATIC_DIR, "home.html")
+
+
+@app.get("/tone")
+def tone_page():
+    return send_from_directory(STATIC_DIR, "score.html")
+
+
+@app.get("/review")
+def review_page():
+    return send_from_directory(STATIC_DIR, "review.html")
+
+
+@app.get("/orphan")
+def orphan_page():
+    return send_from_directory(STATIC_DIR, "orphan.html")
 
 
 @app.get("/score")
-def score_page():
-    return send_from_directory(STATIC_DIR, "score.html")
+def score_page_redirect():
+    """Keep old /score bookmarks working."""
+    return redirect("/tone", code=301)
 
 
 @app.get("/api/scoring-params")
@@ -155,17 +232,36 @@ def api_queue():
         return True
 
     filtered = [a for a in articles if keep(a)]
+
+    sort = (request.args.get("sort") or "score").strip().lower()
+    if sort not in SORT_FIELDS:
+        sort = "score"
+    descending = (request.args.get("order") or "desc").strip().lower() != "asc"
+    filtered = _sort_articles(filtered, sort, descending)
+
+    total = len(filtered)
+    pages = max(1, math.ceil(total / PAGE_SIZE)) if total else 1
+    page = request.args.get("page", default=1, type=int) or 1
+    page = min(max(1, page), pages)
+    start = (page - 1) * PAGE_SIZE
+
     return jsonify(
         {
             "generated_at": data.get("generated_at"),
+            "last_prune_at": data.get("last_prune_at"),
+            "last_ingest_at": data.get("last_ingest_at"),
+            "last_refresh_at": data.get("last_refresh_at"),
             "lang": data.get("lang", "en"),
-            "count": len(filtered),
+            "count": total,
+            "page": page,
+            "per_page": PAGE_SIZE,
+            "pages": pages,
             "total_in_snapshot": data.get("count", len(articles)),
             "sql_only": data.get("sql_only"),
             "error": data.get("error"),
             "rescored": bool(overrides),
             "params": params,
-            "articles": filtered,
+            "articles": filtered[start : start + PAGE_SIZE],
         }
     )
 

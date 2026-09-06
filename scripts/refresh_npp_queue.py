@@ -7,7 +7,12 @@ citation markers, checks whether the registered page creator is currently
 blocked, scores reference-need via Lift Wing (incrementally), and writes
 data/npp_queue.json.
 
-Usage:
+Cadences (for Toolforge jobs):
+  python scripts/refresh_npp_queue.py --mode prune             # hourly
+  python scripts/refresh_npp_queue.py --mode ingest            # daily
+  python scripts/refresh_npp_queue.py --mode refresh-existing  # weekly
+
+One-shot / local:
   python scripts/refresh_npp_queue.py              # full refresh (SQL)
   python scripts/refresh_npp_queue.py --sql-only   # skip Lift Wing
   python scripts/refresh_npp_queue.py --limit 50   # test subset
@@ -18,15 +23,17 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import fcntl
 import json
 import logging
 import os
 import sys
 import tempfile
 import time
+from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 from urllib.parse import quote
 
 # Allow imports from app/
@@ -83,6 +90,8 @@ API_BATCH = 40
 WIKITEXT_BATCH = 20
 USERS_BATCH = 50
 PAGEVIEWS_INTERVAL = 0.2  # seconds between Pageviews REST calls
+INGEST_LIMIT = 2000
+MODES = ("prune", "ingest", "refresh-existing")
 
 
 def _api_get(session, params: dict[str, Any]) -> dict[str, Any]:
@@ -310,6 +319,62 @@ def fetch_unreviewed(
         cur.execute(sql, tuple(params))
         rows = [_decode_row(r) for r in cur.fetchall()]
     log.info("Unreviewed mainspace articles: %d", len(rows))
+    return rows
+
+
+def fetch_still_unreviewed_ids(conn, page_ids: list[int]) -> set[int]:
+    """Return the subset of *page_ids* still unreviewed mainspace non-redirects."""
+    keep: set[int] = set()
+    if not page_ids:
+        return keep
+    for chunk in _chunked(page_ids):
+        placeholders = ",".join(["%s"] * len(chunk))
+        sql = f"""
+            SELECT ptrp.ptrp_page_id
+            FROM pagetriage_page ptrp
+            JOIN page p ON p.page_id = ptrp.ptrp_page_id
+            WHERE ptrp.ptrp_page_id IN ({placeholders})
+              AND ptrp.ptrp_reviewed = 0
+              AND ptrp.ptrp_deleted = 0
+              AND p.page_namespace = 0
+              AND p.page_is_redirect = 0
+        """
+        with conn.cursor() as cur:
+            cur.execute(sql, tuple(chunk))
+            for row in cur.fetchall():
+                keep.add(int(row["ptrp_page_id"]))
+    log.info(
+        "Still unreviewed: %d / %d snapshot IDs", len(keep), len(page_ids)
+    )
+    return keep
+
+
+def fetch_pages_by_ids(conn, page_ids: list[int]) -> list[dict[str, Any]]:
+    """Current page rows for IDs that are still unreviewed mainspace articles."""
+    rows: list[dict[str, Any]] = []
+    if not page_ids:
+        return rows
+    for chunk in _chunked(page_ids):
+        placeholders = ",".join(["%s"] * len(chunk))
+        sql = f"""
+            SELECT
+                p.page_id,
+                p.page_title,
+                p.page_latest AS revision_id,
+                p.page_len,
+                ptrp.ptrp_created AS created
+            FROM pagetriage_page ptrp
+            JOIN page p ON p.page_id = ptrp.ptrp_page_id
+            WHERE p.page_id IN ({placeholders})
+              AND ptrp.ptrp_reviewed = 0
+              AND ptrp.ptrp_deleted = 0
+              AND p.page_namespace = 0
+              AND p.page_is_redirect = 0
+        """
+        with conn.cursor() as cur:
+            cur.execute(sql, tuple(chunk))
+            rows.extend(_decode_row(r) for r in cur.fetchall())
+    log.info("Re-fetched %d / %d pages from replica", len(rows), len(page_ids))
     return rows
 
 
@@ -573,19 +638,75 @@ def apply_flags(
 
 
 def load_previous_snapshot(path: Path) -> dict[int, dict[str, Any]]:
-    if not path.exists():
-        return {}
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        log.warning("Could not read previous snapshot: %s", exc)
-        return {}
+    payload = load_snapshot_payload(path)
     by_id: dict[int, dict[str, Any]] = {}
-    for article in data.get("articles") or []:
+    for article in payload.get("articles") or []:
         pid = article.get("page_id")
         if pid is not None:
             by_id[int(pid)] = article
     return by_id
+
+
+def empty_snapshot_payload() -> dict[str, Any]:
+    return {
+        "generated_at": None,
+        "lang": LANG,
+        "count": 0,
+        "sql_only": False,
+        "source": "sql",
+        "oldest": False,
+        "merged": False,
+        "last_prune_at": None,
+        "last_ingest_at": None,
+        "last_refresh_at": None,
+        "articles": [],
+    }
+
+
+def load_snapshot_payload(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return empty_snapshot_payload()
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        log.warning("Could not read previous snapshot: %s", exc)
+        return empty_snapshot_payload()
+    if not isinstance(data, dict):
+        return empty_snapshot_payload()
+    data.setdefault("articles", [])
+    return data
+
+
+def snapshot_page_ids(articles: list[dict[str, Any]]) -> list[int]:
+    ids: list[int] = []
+    for art in articles:
+        pid = art.get("page_id")
+        if pid is not None:
+            ids.append(int(pid))
+    return ids
+
+
+def keep_unreviewed_articles(
+    articles: list[dict[str, Any]], keep_ids: set[int]
+) -> list[dict[str, Any]]:
+    """Keep snapshot rows whose page_id is still unreviewed."""
+    return [a for a in articles if int(a.get("page_id") or 0) in keep_ids]
+
+
+def merge_articles_by_id(
+    existing: list[dict[str, Any]], incoming: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Replace or add articles keyed by page_id. Incoming wins on conflict."""
+    by_id: dict[int, dict[str, Any]] = {}
+    for art in existing:
+        pid = art.get("page_id")
+        if pid is not None:
+            by_id[int(pid)] = art
+    for art in incoming:
+        pid = art.get("page_id")
+        if pid is not None:
+            by_id[int(pid)] = art
+    return list(by_id.values())
 
 
 def merge_reference_need(
@@ -1021,6 +1142,318 @@ def atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
         raise
 
 
+@contextmanager
+def exclusive_snapshot_lock(path: Path) -> Iterator[None]:
+    """Exclusive flock so prune / ingest / weekly cannot clobber each other."""
+    lock_path = path.with_name(path.name + ".lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(lock_path, "a+", encoding="utf-8") as fh:
+        log.info("Waiting for snapshot lock %s", lock_path)
+        fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
+        try:
+            log.info("Acquired snapshot lock")
+            yield
+        finally:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+
+
+def make_api_session():
+    session = make_session()
+    session.headers.pop("Content-Type", None)
+    session.headers["User-Agent"] = get_user_agent()
+    return session
+
+
+def enrich_from_replica(
+    conn, raw: list[dict[str, Any]], ctop_map: dict[str, str]
+) -> tuple[list[dict[str, Any]], dict[int, str | None]]:
+    """SQL flags + apply_flags for replica rows. Returns (articles, creators)."""
+    if not raw:
+        return [], {}
+    page_ids = [int(r["page_id"]) for r in raw]
+    titles = {int(r["page_id"]): decode_title(r["page_title"]) for r in raw}
+
+    log.info("Fetching category flags…")
+    cats = fetch_article_categories(conn, page_ids, ctop_map)
+
+    log.info("Fetching CTOP talk-page tags…")
+    ctop_talk = fetch_ctop_talk_pages(conn, page_ids, titles)
+    log.info("CTOP talk notices: %d", len(ctop_talk))
+
+    log.info("Fetching AfC accepted talk-page tags…")
+    afc_talk = fetch_afc_talk_pages(conn, page_ids, titles)
+    log.info("AfC accepted (talk): %d", len(afc_talk))
+
+    log.info("Fetching incoming link counts…")
+    incoming = fetch_incoming_counts(conn, page_ids, titles)
+
+    log.info("Fetching page creators…")
+    creators = fetch_page_creators(conn, page_ids)
+
+    articles = apply_flags(raw, cats, ctop_talk, afc_talk, incoming, ctop_map)
+    return articles, creators
+
+
+def attach_incremental_fields(
+    articles: list[dict[str, Any]],
+    previous: dict[int, dict[str, Any]],
+    *,
+    sql_only: bool,
+    session,
+    creators: dict[int, str | None] | None = None,
+    pageviews: bool = True,
+) -> None:
+    """Fill Lift Wing / ChatGPT / creator / pageviews. Mutates articles."""
+    merge_reference_need(articles, previous, sql_only=sql_only)
+    merge_chatgpt_flags(articles, previous, session=session)
+    merge_creator_blocks(
+        articles,
+        previous,
+        creators=creators,
+        session=session,
+    )
+    if pageviews:
+        merge_pageviews(articles, previous, session=session)
+    apply_reviewer_creator_flags(articles)
+
+
+def write_scored_snapshot(
+    path: Path,
+    articles: list[dict[str, Any]],
+    *,
+    sql_only: bool,
+    source: str,
+    previous_payload: dict[str, Any] | None = None,
+    extra: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    scored = [score_article(a) for a in articles]
+    scored.sort(key=lambda a: (-a["score"], (a.get("title") or "").lower()))
+    now = datetime.now(timezone.utc).isoformat()
+    prev = previous_payload or {}
+    payload: dict[str, Any] = {
+        "generated_at": now,
+        "lang": LANG,
+        "count": len(scored),
+        "sql_only": sql_only,
+        "source": source,
+        "oldest": bool(prev.get("oldest")),
+        "merged": bool(prev.get("merged")),
+        "last_prune_at": prev.get("last_prune_at"),
+        "last_ingest_at": prev.get("last_ingest_at"),
+        "last_refresh_at": prev.get("last_refresh_at"),
+        "articles": scored,
+    }
+    if extra:
+        payload.update(extra)
+        payload["articles"] = scored
+        payload["count"] = len(scored)
+        payload["generated_at"] = now
+    atomic_write_json(path, payload)
+    log.info("Wrote %s (%d articles)", path, len(scored))
+    if scored:
+        top = scored[0]
+        log.info(
+            "Top score: %.1f — %s — %s",
+            top["score"],
+            top["title"],
+            ", ".join(top.get("factors") or []),
+        )
+    return scored
+
+
+def _prune_locked(
+    conn, payload: dict[str, Any]
+) -> tuple[list[dict[str, Any]], int]:
+    """Drop reviewed/gone articles from a loaded payload. Caller holds the lock."""
+    articles = list(payload.get("articles") or [])
+    ids = snapshot_page_ids(articles)
+    if not ids:
+        return articles, 0
+    keep_ids = fetch_still_unreviewed_ids(conn, ids)
+    kept = keep_unreviewed_articles(articles, keep_ids)
+    dropped = len(articles) - len(kept)
+    log.info("Prune: kept %d, dropped %d", len(kept), dropped)
+    return kept, dropped
+
+
+def run_prune() -> Path:
+    snapshot = ROOT / SNAPSHOT_PATH
+    t0 = time.monotonic()
+    from db import get_db_connection
+
+    conn = get_db_connection()
+    dropped = 0
+    try:
+        with exclusive_snapshot_lock(snapshot):
+            payload = load_snapshot_payload(snapshot)
+            kept, dropped = _prune_locked(conn, payload)
+            if not payload.get("articles") and dropped == 0:
+                log.info("Snapshot empty — nothing to prune")
+                return snapshot
+            now = datetime.now(timezone.utc).isoformat()
+            write_scored_snapshot(
+                snapshot,
+                kept,
+                sql_only=bool(payload.get("sql_only")),
+                source=str(payload.get("source") or "sql"),
+                previous_payload=payload,
+                extra={"last_prune_at": now},
+            )
+    finally:
+        conn.close()
+    log.info("Prune finished in %.1fs (dropped %d)", time.monotonic() - t0, dropped)
+    return snapshot
+
+
+def run_ingest(*, sql_only: bool, limit: int) -> Path:
+    """Prune, then add the newest unreviewed pages not already in the snapshot."""
+    snapshot = ROOT / SNAPSHOT_PATH
+    t0 = time.monotonic()
+    ctop_map = load_ctop_category_map(ROOT)
+    from db import get_db_connection
+
+    conn = get_db_connection()
+    try:
+        with exclusive_snapshot_lock(snapshot):
+            payload = load_snapshot_payload(snapshot)
+            kept, dropped = _prune_locked(conn, payload)
+            keep_ids = set(snapshot_page_ids(kept))
+            now = datetime.now(timezone.utc).isoformat()
+            write_scored_snapshot(
+                snapshot,
+                kept,
+                sql_only=bool(payload.get("sql_only", sql_only)),
+                source="sql",
+                previous_payload=payload,
+                extra={"last_prune_at": now},
+            )
+
+        raw = fetch_unreviewed(
+            conn,
+            limit,
+            oldest=False,
+            exclude_ids=keep_ids or None,
+        )
+        new_articles, creators = enrich_from_replica(conn, raw, ctop_map)
+
+        session = make_api_session()
+        previous = {int(a["page_id"]): a for a in kept if a.get("page_id") is not None}
+        attach_incremental_fields(
+            new_articles,
+            previous,
+            sql_only=sql_only,
+            session=session,
+            creators=creators,
+            pageviews=True,
+        )
+
+        with exclusive_snapshot_lock(snapshot):
+            payload2 = load_snapshot_payload(snapshot)
+            existing = list(payload2.get("articles") or [])
+            new_ids = snapshot_page_ids(new_articles)
+            still = fetch_still_unreviewed_ids(conn, new_ids) if new_ids else set()
+            new_kept = keep_unreviewed_articles(new_articles, still)
+            combined = merge_articles_by_id(existing, new_kept)
+            apply_reviewer_creator_flags(combined)
+            now = datetime.now(timezone.utc).isoformat()
+            write_scored_snapshot(
+                snapshot,
+                combined,
+                sql_only=sql_only,
+                source="sql",
+                previous_payload=payload2,
+                extra={
+                    "last_ingest_at": now,
+                    "merged": True,
+                    "oldest": False,
+                    "ingest_added": len(new_kept),
+                },
+            )
+            log.info(
+                "Ingest added %d (pruned %d earlier, %.1fs)",
+                len(new_kept),
+                dropped,
+                time.monotonic() - t0,
+            )
+    finally:
+        conn.close()
+    return snapshot
+
+
+def run_refresh_existing(*, sql_only: bool, limit: int | None) -> Path:
+    """Re-enrich snapshot pages that are still unreviewed (weekly)."""
+    snapshot = ROOT / SNAPSHOT_PATH
+    t0 = time.monotonic()
+    ctop_map = load_ctop_category_map(ROOT)
+    from db import get_db_connection
+
+    conn = get_db_connection()
+    try:
+        with exclusive_snapshot_lock(snapshot):
+            payload = load_snapshot_payload(snapshot)
+            articles = list(payload.get("articles") or [])
+            if not articles:
+                raise SystemExit(f"No snapshot at {snapshot}")
+            kept, dropped = _prune_locked(conn, payload)
+            now = datetime.now(timezone.utc).isoformat()
+            write_scored_snapshot(
+                snapshot,
+                kept,
+                sql_only=bool(payload.get("sql_only", sql_only)),
+                source="sql",
+                previous_payload=payload,
+                extra={"last_prune_at": now},
+            )
+            previous = {
+                int(a["page_id"]): a for a in kept if a.get("page_id") is not None
+            }
+            to_refresh = kept[: int(limit)] if limit else kept
+            kept_ids = snapshot_page_ids(to_refresh)
+
+        raw = fetch_pages_by_ids(conn, kept_ids)
+        refreshed, creators = enrich_from_replica(conn, raw, ctop_map)
+
+        session = make_api_session()
+        attach_incremental_fields(
+            refreshed,
+            previous,
+            sql_only=sql_only,
+            session=session,
+            creators=creators,
+            pageviews=True,
+        )
+
+        with exclusive_snapshot_lock(snapshot):
+            payload2 = load_snapshot_payload(snapshot)
+            existing = list(payload2.get("articles") or [])
+            current_ids = set(snapshot_page_ids(existing))
+            incoming = [
+                a
+                for a in refreshed
+                if int(a.get("page_id") or 0) in current_ids
+            ]
+            combined = merge_articles_by_id(existing, incoming)
+            apply_reviewer_creator_flags(combined)
+            now = datetime.now(timezone.utc).isoformat()
+            write_scored_snapshot(
+                snapshot,
+                combined,
+                sql_only=sql_only,
+                source="sql",
+                previous_payload=payload2,
+                extra={"last_refresh_at": now},
+            )
+            log.info(
+                "Refresh-existing updated %d (pruned %d earlier, %.1fs)",
+                len(incoming),
+                dropped,
+                time.monotonic() - t0,
+            )
+    finally:
+        conn.close()
+    return snapshot
+
+
 def run(
     *,
     sql_only: bool,
@@ -1049,16 +1482,14 @@ def run(
             raise SystemExit("--api requires --limit (e.g. --limit 50)")
         if oldest or merge:
             raise SystemExit("--oldest/--merge are SQL-only (not supported with --api)")
-        session = make_session()
-        # Action API GETs should not force JSON content-type
-        session.headers.pop("Content-Type", None)
-        session.headers["User-Agent"] = get_user_agent()
+        session = make_api_session()
         log.info("Fetching unreviewed via PageTriage API (limit=%d)…", limit)
         raw = fetch_unreviewed_via_api(session, limit)
         log.info("Enriching %d pages via Action API…", len(raw))
         raw, cats, ctop_talk, afc_talk, incoming = enrich_via_api(session, raw)
         log.info("CTOP talk notices: %d; AfC talk: %d", len(ctop_talk), len(afc_talk))
-        creators: dict[int, str | None] | None = None
+        articles = apply_flags(raw, cats, ctop_talk, afc_talk, incoming, ctop_map)
+        creators = None
     else:
         from db import get_db_connection
 
@@ -1071,38 +1502,15 @@ def run(
                 oldest=oldest,
                 exclude_ids=exclude_ids or None,
             )
-            page_ids = [int(r["page_id"]) for r in raw]
-            titles = {
-                int(r["page_id"]): decode_title(r["page_title"]) for r in raw
-            }
-
-            log.info("Fetching category flags…")
-            cats = fetch_article_categories(conn, page_ids, ctop_map)
-
-            log.info("Fetching CTOP talk-page tags…")
-            ctop_talk = fetch_ctop_talk_pages(conn, page_ids, titles)
-            log.info("CTOP talk notices: %d", len(ctop_talk))
-
-            log.info("Fetching AfC accepted talk-page tags…")
-            afc_talk = fetch_afc_talk_pages(conn, page_ids, titles)
-            log.info("AfC accepted (talk): %d", len(afc_talk))
-
-            log.info("Fetching incoming link counts…")
-            incoming = fetch_incoming_counts(conn, page_ids, titles)
-
-            log.info("Fetching page creators…")
-            creators = fetch_page_creators(conn, page_ids)
+            articles, creators = enrich_from_replica(conn, raw, ctop_map)
         finally:
             conn.close()
 
-    articles = apply_flags(raw, cats, ctop_talk, afc_talk, incoming, ctop_map)
     merge_reference_need(articles, previous, sql_only=sql_only)
 
     shared_session = session
     if shared_session is None:
-        shared_session = make_session()
-        shared_session.headers.pop("Content-Type", None)
-        shared_session.headers["User-Agent"] = get_user_agent()
+        shared_session = make_api_session()
 
     merge_chatgpt_flags(articles, previous, session=shared_session)
     merge_creator_blocks(
@@ -1128,35 +1536,19 @@ def run(
 
     apply_reviewer_creator_flags(combined)
     merge_pageviews(combined, previous, session=shared_session)
-    scored = [score_article(a) for a in combined]
-    scored.sort(key=lambda a: (-a["score"], a["title"].lower()))
 
-    payload = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "lang": LANG,
-        "count": len(scored),
-        "sql_only": sql_only,
-        "source": "api" if use_api else "sql",
-        "oldest": oldest,
-        "merged": merge,
-        "articles": scored,
-    }
-    atomic_write_json(snapshot, payload)
-    elapsed = time.monotonic() - t0
-    log.info(
-        "Wrote %s (%d articles, %.1fs)",
-        snapshot,
-        len(scored),
-        elapsed,
-    )
-    if scored:
-        top = scored[0]
-        log.info(
-            "Top score: %.1f — %s — %s",
-            top["score"],
-            top["title"],
-            ", ".join(top["factors"]),
+    existing_payload = load_snapshot_payload(snapshot)
+    with exclusive_snapshot_lock(snapshot):
+        write_scored_snapshot(
+            snapshot,
+            combined,
+            sql_only=sql_only,
+            source="api" if use_api else "sql",
+            previous_payload=existing_payload,
+            extra={"oldest": oldest, "merged": merge},
         )
+    elapsed = time.monotonic() - t0
+    log.info("Full refresh finished in %.1fs", elapsed)
     return snapshot
 
 
@@ -1169,38 +1561,38 @@ def refresh_pageviews_only() -> Path:
     data = json.loads(snapshot.read_text(encoding="utf-8"))
     articles = list(data.get("articles") or [])
     previous = {int(a["page_id"]): a for a in articles if a.get("page_id") is not None}
-    session = make_session()
-    session.headers.pop("Content-Type", None)
-    session.headers["User-Agent"] = get_user_agent()
+    session = make_api_session()
     merge_pageviews(articles, previous, session=session)
-    scored = [score_article(a) for a in articles]
-    scored.sort(key=lambda a: (-a["score"], a["title"].lower()))
-    data["articles"] = scored
-    data["count"] = len(scored)
-    data["generated_at"] = datetime.now(timezone.utc).isoformat()
-    data["pageviews_refreshed"] = True
-    atomic_write_json(snapshot, data)
+    with exclusive_snapshot_lock(snapshot):
+        write_scored_snapshot(
+            snapshot,
+            articles,
+            sql_only=bool(data.get("sql_only")),
+            source=str(data.get("source") or "sql"),
+            previous_payload=data,
+            extra={"pageviews_refreshed": True},
+        )
     log.info(
-        "Pageviews refresh wrote %s (%d articles, %.1fs)",
-        snapshot,
-        len(scored),
+        "Pageviews refresh finished (%d articles, %.1fs)",
+        len(articles),
         time.monotonic() - t0,
     )
-    nonzero = sum(1 for a in scored if (a.get("avg_daily_views") or 0) > 0)
-    log.info("Articles with views > 0: %d / %d", nonzero, len(scored))
-    if scored:
-        top_v = max(scored, key=lambda a: a.get("avg_daily_views") or 0)
-        log.info(
-            "Highest views: %s — %s/day — score %.1f",
-            top_v["title"],
-            top_v.get("avg_daily_views"),
-            top_v["score"],
-        )
+    nonzero = sum(1 for a in articles if (a.get("avg_daily_views") or 0) > 0)
+    log.info("Articles with views > 0: %d / %d", nonzero, len(articles))
     return snapshot
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--mode",
+        choices=MODES,
+        default=None,
+        help=(
+            "Scheduled cadence: prune (hourly), ingest (daily), "
+            "refresh-existing (weekly). SQL replica required."
+        ),
+    )
     parser.add_argument(
         "--sql-only",
         action="store_true",
@@ -1215,7 +1607,7 @@ def main() -> None:
         "--limit",
         type=int,
         default=None,
-        help="Only process N unreviewed pages (for testing)",
+        help="Only process N unreviewed pages (ingest default: 2000)",
     )
     parser.add_argument(
         "--oldest",
@@ -1233,6 +1625,20 @@ def main() -> None:
         help="Only refresh Pageviews REST averages on the existing snapshot (day-cached)",
     )
     args = parser.parse_args()
+    if args.mode:
+        if args.api or args.merge or args.oldest or args.refresh_pageviews:
+            raise SystemExit(
+                "--mode cannot be combined with --api / --merge / --oldest / "
+                "--refresh-pageviews"
+            )
+        if args.mode == "prune":
+            run_prune()
+            return
+        if args.mode == "ingest":
+            run_ingest(sql_only=args.sql_only, limit=args.limit or INGEST_LIMIT)
+            return
+        run_refresh_existing(sql_only=args.sql_only, limit=args.limit)
+        return
     if args.refresh_pageviews:
         refresh_pageviews_only()
         return

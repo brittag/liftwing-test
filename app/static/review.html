@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projo · Articles to review</title>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <style>
+    :root {
+      font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
+      color: #1a1a1a;
+      line-height: 1.4;
+    }
+    body {
+      max-width: 960px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+    }
+    .site-header {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      column-gap: 0.7rem;
+      row-gap: 0.45rem;
+      align-items: center;
+    }
+    .logo-link {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-self: stretch;
+      height: 0;
+      min-height: 100%;
+      display: flex;
+    }
+    .logo {
+      height: 100%;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+    .brand {
+      color: inherit;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+    }
+    .brand-row {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.35rem 1rem;
+      min-width: 0;
+    }
+    .tagline {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #555;
+      line-height: 1.3;
+    }
+    .tabs {
+      grid-column: 2;
+      grid-row: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+    .tabs a {
+      color: #0645ad;
+      text-decoration: none;
+      padding: 0.2rem 0.65rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      line-height: 1.25;
+    }
+    .tabs a:hover { background: #f0f0f0; }
+    .tabs a[aria-current="page"] {
+      color: #1a1a1a;
+      font-weight: 600;
+      background: #eee;
+      border-color: transparent;
+      pointer-events: none;
+    }
+    h1 { font-size: 1.35rem; margin-bottom: 0.25rem; }
+    .page-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .page-heading h1 { margin: 0; }
+    button.chill-mode {
+      flex-shrink: 0;
+      background: #eefaf2;
+      border: 1px solid #2a7;
+      color: #14633a;
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: 4px;
+    }
+    button.chill-mode[aria-pressed="true"] {
+      background: #2a7;
+      color: #fff;
+    }
+    .hint { color: #555; font-size: 0.9rem; margin-bottom: 1rem; }
+    .meta { color: #555; font-size: 0.85rem; margin: 0.5rem 0 0.25rem; }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.85rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+    }
+    .filters label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .filters input[type="text"],
+    .filters input[type="number"] {
+      font: inherit;
+      padding: 0.25rem 0.4rem;
+    }
+    .filters input[type="text"] { width: 12rem; }
+    .filters input[type="number"] { width: 4.5rem; }
+    button {
+      font: inherit;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+    }
+    #status { margin: 0.35rem 0; color: #444; }
+    #status:empty,
+    #error:empty { display: none; }
+    #error { color: #a40000; margin: 0.35rem 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 0.4rem 0.35rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th.sortable { cursor: pointer; user-select: none; }
+    th.sortable:hover { text-decoration: underline; }
+    .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    .chip {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.1rem 0.35rem;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background: #f6f6f6;
+      color: #333;
+      white-space: nowrap;
+    }
+    .chip.hot { border-color: #c44; background: #fff0f0; }
+    .chip.cool { border-color: #2a7; background: #eefaf2; color: #14633a; }
+    .hidden { display: none; }
+    .pager {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      align-items: center;
+      margin: 0.25rem 0 0.75rem;
+      font-size: 0.9rem;
+    }
+    .pager.hidden { display: none; }
+    .pager button[aria-current="page"] {
+      font-weight: 700;
+    }
+    .pager button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    .ranking-method {
+      margin: 0 0 1rem;
+      font-size: 0.9rem;
+    }
+    .ranking-method summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    .ranking-method summary:hover {
+      text-decoration: underline;
+    }
+    .ranking-method table {
+      margin-top: 0.35rem;
+      font-size: 0.85rem;
+    }
+    .ranking-method th:nth-child(2),
+    .ranking-method td:nth-child(2) {
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      text-align: right;
+    }
+    .ranking-method code {
+      font-size: 0.8em;
+      word-break: break-all;
+    }
+    details.rescore {
+      margin: 0 0 1rem;
+      font-size: 0.9rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 0.35rem 0.6rem;
+    }
+    details.rescore summary {
+      cursor: pointer;
+      font-weight: 600;
+      user-select: none;
+    }
+    details.rescore summary .dirty { color: #8a6d00; font-weight: 500; }
+    .rescore-body { margin-top: 0.5rem; }
+    .rescore-group { margin-bottom: 0.6rem; }
+    .rescore-group h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #555;
+      margin: 0 0 0.3rem;
+    }
+    .rescore-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+      gap: 0.3rem 1rem;
+    }
+    .rescore-grid label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .rescore-grid input {
+      font: inherit;
+      width: 5.5rem;
+      padding: 0.2rem 0.3rem;
+      text-align: right;
+    }
+    .rescore-grid input.changed { border-color: #d4a800; background: #fff8d6; }
+    .rescore-actions { display: flex; gap: 0.5rem; align-items: center; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo-link" href="/" aria-label="Projo home">
+      <img class="logo" src="/owl.png" alt="" width="305" height="511" />
+    </a>
+    <div class="brand-row">
+      <a class="brand" href="/">Projo</a>
+      <p class="tagline">Sort articles to find task targets with high impact for readers.</p>
+    </div>
+    <nav class="tabs" aria-label="Tools">
+      <a href="/">Articles to improve</a>
+      <a href="/review" aria-current="page">Articles to review</a>
+      <a href="/tone">Tone checker</a>
+      <a href="/orphan">Orphan linker</a>
+    </nav>
+  </header>
+  <hr/>
+
+  <div class="page-heading">
+    <h1>Articles to review</h1>
+    <button type="button" id="chill-mode" class="chill-mode" aria-pressed="false">Chill mode</button>
+  </div>
+  <p class="hint">
+    For <a href="https://en.wikipedia.org/wiki/Wikipedia:New_pages_patrol">new page reviewers</a> for English Wikipedia:
+    find the unreviewed articles that most need review.
+  </p>
+
+  <details class="ranking-method">
+    <summary>Details about ranking method</summary>
+    <table>
+      <thead>
+        <tr>
+          <th>Factor</th>
+          <th>Points</th>
+          <th>Source of info</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Reference need</td>
+          <td>+0–40</td>
+          <td><a href="https://meta.wikimedia.org/wiki/Machine_learning_models/Production/Multilingual_reference_need">LiftWing multilingual reference-need API</a></td>
+          <td>Higher % of uncited sentences that need citations = lower credibility</td>
+        </tr>
+        <tr>
+          <td>Page views</td>
+          <td>+0–40</td>
+          <td>Average daily page views over the last 7 days (log-scaled)</td>
+          <td>Problems on high-traffic articles affect more readers</td>
+        </tr>
+        <tr>
+          <td>Contentious topic</td>
+          <td>+40</td>
+          <td>Talk page notices or categories that signal <a href="https://en.wikipedia.org/wiki/Wikipedia:Contentious_topics#List_of_contentious_topics">a contentious topic</a></td>
+          <td>Priority because these tend toward POV-pushing</td>
+        </tr>
+        <tr>
+          <td>Violence</td>
+          <td>+20</td>
+          <td>Categories related to murder, abuse, slavery, human trafficking, terrorism, sexual assault, political violence, or war crimes</td>
+          <td>More likely to have POV issues; need to check for <a href="https://en.wikipedia.org/wiki/Wikipedia:Notability_(people)#Crime_victims_and_perpetrators">WP:CRIME</a>, <a href="https://en.wikipedia.org/wiki/Wikipedia:Biographies_of_living_persons#Subjects_notable_only_for_one_event">WP:BLP1E</a>, <a href="https://en.wikipedia.org/wiki/Wikipedia:Biographies_of_living_persons#Avoid_victimization">WP:AVOIDVICTIM</a></td>
+        </tr>
+        <tr>
+          <td>Tagged as AI-generated</td>
+          <td>+20</td>
+          <td><a href="https://en.wikipedia.org/wiki/Category:Articles_containing_suspected_AI-generated_texts">Category:Articles containing suspected AI-generated texts</a></td>
+          <td><a href="https://en.wikipedia.org/wiki/Wikipedia:Writing_articles_with_large_language_models">WP:NOLLM</a></td>
+        </tr>
+        <tr>
+          <td>ChatGPT in references</td>
+          <td>+20</td>
+          <td>Presence of <code>utm_source=chatgpt.com</code></td>
+          <td>Likely to have issues related to LLM generation</td>
+        </tr>
+        <tr>
+          <td>BLP likely a minor</td>
+          <td>+20</td>
+          <td>Year-of-birth categories that indicate age 18 or younger</td>
+          <td>Risk of harm if these articles have issues (stacks with BLP)</td>
+        </tr>
+        <tr>
+          <td>Biography of a living person</td>
+          <td>+10</td>
+          <td><a href="https://en.wikipedia.org/wiki/Category:Living_people">Category:Living people</a></td>
+          <td>Issues can harm people; articles may involve COI/UPE</td>
+        </tr>
+        <tr>
+          <td>Tagged for notability issues</td>
+          <td>+10</td>
+          <td><a href="https://en.wikipedia.org/wiki/Category:All_articles_with_topics_of_unclear_notability">Category:All articles with topics of unclear notability</a></td>
+          <td>May need to be draftified or nominated for deletion</td>
+        </tr>
+        <tr>
+          <td>Tagged as promotional</td>
+          <td>+10</td>
+          <td><a href="https://en.wikipedia.org/wiki/Category:All_articles_with_a_promotional_tone">Category:All articles with a promotional tone</a></td>
+          <td>May need some sort of action</td>
+        </tr>
+        <tr>
+          <td>Tagged as COI</td>
+          <td>+10</td>
+          <td><a href="https://en.wikipedia.org/wiki/Category:Wikipedia_articles_with_possible_conflicts_of_interest">Category:Wikipedia articles with possible conflicts of interest</a></td>
+          <td>May need to be draftified or nominated for deletion</td>
+        </tr>
+        <tr>
+          <td>Tagged as having POV issues</td>
+          <td>+10</td>
+          <td><a href="https://en.wikipedia.org/wiki/Category:All_Wikipedia_neutral_point_of_view_disputes">Category:All Wikipedia neutral point of view disputes</a></td>
+          <td>May need some sort of action</td>
+        </tr>
+        <tr>
+          <td>Orphaned article</td>
+          <td>+10</td>
+          <td>Zero incoming links</td>
+          <td>Less likely to have been seen by other editors</td>
+        </tr>
+        <tr>
+          <td>Creator is blocked</td>
+          <td>+10</td>
+          <td>Creator account is blocked</td>
+          <td>Not a good sign</td>
+        </tr>
+        <tr>
+          <td>Page length</td>
+          <td>+0–10</td>
+          <td>Source text byte length (log-scaled)</td>
+          <td>Long new articles are more often LLM-generated or POV-pushing than short ones</td>
+        </tr>
+        <tr>
+          <td>Article older than 90 days</td>
+          <td>+5</td>
+          <td>Page creation date &gt; 90 days ago</td>
+          <td>Older unreviewed pages are indexed by search engines</td>
+        </tr>
+        <tr>
+          <td>Tagged as orphan</td>
+          <td>+5</td>
+          <td><a href="https://en.wikipedia.org/wiki/Category:All_orphaned_articles">Orphan category</a> present and at least one incoming link</td>
+          <td>Suggests attention is needed</td>
+        </tr>
+        <tr>
+          <td>Sports</td>
+          <td>−5</td>
+          <td>Categories related to sports</td>
+          <td>Most athlete biographies and sports-event articles are not very sensitive or controversial</td>
+        </tr>
+        <tr>
+          <td>AfC</td>
+          <td>−10</td>
+          <td>Accepted AfC submission</td>
+          <td>Someone already reviewed it via Articles for Creation</td>
+        </tr>
+        <tr>
+          <td>Creator is NPP or AfC reviewer</td>
+          <td>−10</td>
+          <td>Creator is on the NPP or AfC reviewer lists</td>
+          <td>Hopefully they know what they're doing</td>
+        </tr>
+        <tr>
+          <td>Disambiguation page</td>
+          <td>−20</td>
+          <td><a href="https://en.wikipedia.org/wiki/Category:Disambiguation_pages">Category:Disambiguation pages</a></td>
+          <td>Disambiguation pages are unlikely to be controversial</td>
+        </tr>
+      </tbody>
+    </table>
+  </details>
+
+  <details class="rescore" id="rescore">
+    <summary>Rescore <span class="dirty" id="rescore-dirty"></span></summary>
+    <div class="rescore-body">
+      <p class="hint">
+        Edit any weight to re-rank the snapshot live. Continuous factors
+        scale <code>log1p(x) / log1p(cap)</code> up to their max; the rest are
+        flat bonuses/penalties. Changed fields are highlighted yellow.
+      </p>
+      <div id="rescore-groups"></div>
+      <div class="rescore-actions">
+        <button type="button" id="rescore-reset">Reset to defaults</button>
+        <button type="button" id="rescore-copy">Copy as JSON</button>
+      </div>
+    </div>
+  </details>
+
+  <div class="filters">
+    <label>Search titles <input id="q" type="text" placeholder="Title…" /></label>
+    <label>Min views <input id="min_views" type="number" min="0" step="1" value="0" /></label>
+    <label><input type="checkbox" id="blp" /> Living people</label>
+    <label><input type="checkbox" id="minors" /> Minors</label>
+    <label><input type="checkbox" id="ctop" /> Contentious topic</label>
+    <label><input type="checkbox" id="violence" /> Violence</label>
+    <label><input type="checkbox" id="sports" /> Sports</label>
+    <label><input type="checkbox" id="blocked_creator" /> Creator is blocked</label>
+    <label><input type="checkbox" id="afc" /> Went through AfC</label>
+    <label><input type="checkbox" id="reviewer_creator" /> Creator is NPP or AfC reviewer</label>
+    <label><input type="checkbox" id="chatgpt" /> ChatGPT in refs</label>
+    <label><input type="checkbox" id="ai" /> Tag: AI</label>
+    <label><input type="checkbox" id="notability" /> Tag: Notability</label>
+    <label><input type="checkbox" id="pov" /> Tag: POV</label>
+    <label><input type="checkbox" id="coi" /> Tag: COI</label>
+    <label><input type="checkbox" id="promotional" /> Tag: Promotional</label>
+    <label><input type="checkbox" id="orphan" /> Orphan</label>
+  </div>
+
+  <p class="meta" id="meta"></p>
+  <p id="status"></p>
+  <p id="error"></p>
+  <nav class="pager hidden" data-pager aria-label="Pagination"></nav>
+
+  <table id="results" class="hidden">
+    <thead>
+      <tr>
+        <th id="sort-score" class="sortable">Score ↕</th>
+        <th id="sort-title" class="sortable">Title ↕</th>
+        <th id="sort-views" class="sortable">Views/day ↕</th>
+        <th id="sort-need" class="sortable">Ref need ↕</th>
+        <th id="sort-created" class="sortable">Created ↕</th>
+        <th>Factors</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <nav class="pager hidden" data-pager aria-label="Pagination"></nav>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const errorEl = document.getElementById("error");
+    const metaEl = document.getElementById("meta");
+    const table = document.getElementById("results");
+    const tbody = table.querySelector("tbody");
+
+    let rows = [];
+    let sortKey = "score";
+    let sortDesc = true;
+    let currentPage = 1;
+    let totalPages = 1;
+    let filteredCount = 0;
+
+    const HOT = new Set(["ai", "chatgpt", "minor", "ctop", "blocked-creator", "violence", "pov"]);
+    const COOL = new Set(["reviewer-creator", "AfC"]);
+
+    function fmtScore(v) {
+      if (v === null || v === undefined) return "—";
+      return Number(v).toFixed(1);
+    }
+
+    function fmtNeed(v) {
+      if (v === null || v === undefined) return "—";
+      return (Number(v) * 100).toFixed(1) + "%";
+    }
+
+    function fmtViews(v) {
+      if (v === null || v === undefined) return "0";
+      return Number(v).toLocaleString();
+    }
+
+    function fmtCreated(v) {
+      if (v === null || v === undefined || v === "") return "—";
+      const digits = String(v).trim().slice(0, 8);
+      if (digits.length < 8 || !/^\d{8}$/.test(digits)) return "—";
+      return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
+    }
+
+    function chipClass(factor) {
+      const base = factor.split(":")[0];
+      if (HOT.has(base) || factor.startsWith("ctop")) return "chip hot";
+      if (COOL.has(base)) return "chip cool";
+      return "chip";
+    }
+
+    function renderPagers() {
+      for (const pager of document.querySelectorAll("[data-pager]")) {
+        pager.replaceChildren();
+        const hide = filteredCount === 0 || totalPages <= 1;
+        pager.classList.toggle("hidden", hide);
+        if (hide) continue;
+
+        const prev = document.createElement("button");
+        prev.type = "button";
+        prev.textContent = "Previous";
+        prev.disabled = currentPage <= 1;
+        prev.dataset.page = String(currentPage - 1);
+        pager.appendChild(prev);
+
+        for (let p = 1; p <= totalPages; p++) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = String(p);
+          btn.dataset.page = String(p);
+          if (p === currentPage) {
+            btn.setAttribute("aria-current", "page");
+            btn.disabled = true;
+          }
+          pager.appendChild(btn);
+        }
+
+        const next = document.createElement("button");
+        next.type = "button";
+        next.textContent = "Next";
+        next.disabled = currentPage >= totalPages;
+        next.dataset.page = String(currentPage + 1);
+        pager.appendChild(next);
+      }
+    }
+
+    function render() {
+      tbody.innerHTML = "";
+      for (const r of rows) {
+        const tr = document.createElement("tr");
+
+        const score = document.createElement("td");
+        score.className = "num";
+        score.textContent = fmtScore(r.score);
+
+        const titleCell = document.createElement("td");
+        if (r.wikipedia_url) {
+          const a = document.createElement("a");
+          a.href = r.wikipedia_url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.textContent = r.title;
+          titleCell.appendChild(a);
+        } else {
+          titleCell.textContent = r.title;
+        }
+
+        const views = document.createElement("td");
+        views.className = "num";
+        views.textContent = fmtViews(r.avg_daily_views);
+
+        const need = document.createElement("td");
+        need.className = "num";
+        need.textContent = fmtNeed(r.reference_need);
+
+        const created = document.createElement("td");
+        created.className = "num";
+        created.textContent = fmtCreated(r.created);
+
+        const factors = document.createElement("td");
+        const wrap = document.createElement("div");
+        wrap.className = "chips";
+        for (const f of r.factors || []) {
+          const span = document.createElement("span");
+          span.className = chipClass(f);
+          span.textContent = f;
+          wrap.appendChild(span);
+        }
+        factors.appendChild(wrap);
+
+        tr.append(score, titleCell, views, need, created, factors);
+        tbody.appendChild(tr);
+      }
+
+      table.classList.toggle("hidden", rows.length === 0);
+      setSortHeaders();
+      syncChillButton();
+      renderPagers();
+    }
+
+    function setSortHeaders() {
+      const map = {
+        score: document.getElementById("sort-score"),
+        title: document.getElementById("sort-title"),
+        created: document.getElementById("sort-created"),
+        views: document.getElementById("sort-views"),
+        need: document.getElementById("sort-need"),
+      };
+      const labels = {
+        score: "Score",
+        title: "Title",
+        created: "Created",
+        views: "Views/day",
+        need: "Ref need",
+      };
+      for (const [key, el] of Object.entries(map)) {
+        if (sortKey === key) {
+          el.textContent = labels[key] + (sortDesc ? " ↓" : " ↑");
+        } else {
+          el.textContent = labels[key] + " ↕";
+        }
+      }
+    }
+
+    function chillModeActive() {
+      return sortKey === "score" && !sortDesc;
+    }
+
+    function syncChillButton() {
+      document
+        .getElementById("chill-mode")
+        .setAttribute("aria-pressed", chillModeActive() ? "true" : "false");
+    }
+
+    function setChillMode(on) {
+      sortKey = "score";
+      sortDesc = !on; // on → asc (lowest first); off → desc
+      loadFromStart();
+    }
+
+    function setSort(key) {
+      if (sortKey === key) {
+        sortDesc = !sortDesc;
+      } else {
+        sortKey = key;
+        sortDesc = key !== "title";
+      }
+      currentPage = 1;
+      loadQueue();
+    }
+
+    document.getElementById("chill-mode").addEventListener("click", () => {
+      setChillMode(!chillModeActive());
+    });
+
+    document.getElementById("sort-score").addEventListener("click", () => setSort("score"));
+    document.getElementById("sort-title").addEventListener("click", () => setSort("title"));
+    document.getElementById("sort-created").addEventListener("click", () => setSort("created"));
+    document.getElementById("sort-views").addEventListener("click", () => setSort("views"));
+    document.getElementById("sort-need").addEventListener("click", () => setSort("need"));
+
+    for (const pager of document.querySelectorAll("[data-pager]")) {
+      pager.addEventListener("click", (event) => {
+        const btn = event.target.closest("button");
+        if (!btn || btn.disabled) return;
+        const nextPage = Number(btn.dataset.page);
+        if (!nextPage || nextPage === currentPage) return;
+        currentPage = nextPage;
+        loadQueue();
+      });
+    }
+
+    function filterParams() {
+      const params = new URLSearchParams();
+      const q = document.getElementById("q").value.trim();
+      if (q) params.set("q", q);
+      const minViews = document.getElementById("min_views").value;
+      if (minViews && Number(minViews) > 0) params.set("min_views", minViews);
+      for (const id of [
+        "minors", "blp", "ctop", "ai", "chatgpt", "blocked_creator",
+        "reviewer_creator",
+        "notability", "pov", "sports", "violence", "afc", "coi", "promotional", "orphan",
+      ]) {
+        if (document.getElementById(id).checked) params.set(id, "1");
+      }
+      params.set("page", String(currentPage));
+      params.set("sort", sortKey);
+      params.set("order", sortDesc ? "desc" : "asc");
+      for (const [key, value] of Object.entries(rescoreOverrides())) {
+        params.set("w_" + key, value);
+      }
+      return params;
+    }
+
+    // ---- Rescore zippy -----------------------------------------------------
+    const RESCORE_GROUPS = [
+      { title: "Continuous (max points)", keys: [
+        ["reference_need_max", "Reference need"],
+        ["pageviews_max", "Pageviews"],
+        ["page_len_max", "Page length"],
+      ]},
+      { title: "Curves & age", keys: [
+        ["pageview_log_cap", "Pageview log cap (views/day)"],
+        ["page_len_log_cap", "Page length log cap (bytes)"],
+        ["stale_days", "Stale after (days)"],
+        ["older_than_90d", "Stale bonus"],
+      ]},
+      { title: "Bonuses & penalties", keys: [
+        ["ai_generated", "AI-generated"],
+        ["chatgpt", "ChatGPT citation"],
+        ["minor_blp", "Minor (BLP)"],
+        ["living_person", "Living person"],
+        ["ctop", "Contentious topic"],
+        ["notability", "Notability tag"],
+        ["coi", "COI tag"],
+        ["promotional", "Promotional tag"],
+        ["orphan_links", "Orphan (no links)"],
+        ["orphan_category_only", "Orphan (category only)"],
+        ["pov", "POV dispute"],
+        ["violence", "Violence category"],
+        ["creator_blocked", "Blocked creator"],
+        ["disambiguation", "Disambiguation"],
+        ["reviewer_creator", "Reviewer creator"],
+        ["afc_accepted", "Accepted AfC"],
+        ["sports", "Sports"],
+      ]},
+    ];
+
+    let rescoreDefaults = {};
+    const rescoreInputs = new Map();
+    const dirtyEl = document.getElementById("rescore-dirty");
+
+    function rescoreOverrides() {
+      const out = {};
+      for (const [key, input] of rescoreInputs) {
+        const raw = input.value.trim();
+        if (raw === "") continue;
+        const num = Number(raw);
+        if (!Number.isFinite(num) || num === rescoreDefaults[key]) continue;
+        out[key] = num;
+      }
+      return out;
+    }
+
+    function markRescoreState() {
+      const overrides = rescoreOverrides();
+      for (const [key, input] of rescoreInputs) {
+        input.classList.toggle("changed", key in overrides);
+      }
+      const changed = Object.keys(overrides).length;
+      dirtyEl.textContent = changed ? `(${changed} changed)` : "";
+    }
+
+    function buildRescoreForm(defaults) {
+      rescoreDefaults = defaults;
+      const container = document.getElementById("rescore-groups");
+      container.innerHTML = "";
+      rescoreInputs.clear();
+      const placed = new Set();
+      const groups = RESCORE_GROUPS.map((g) => ({ ...g, keys: [...g.keys] }));
+      for (const g of groups) for (const [k] of g.keys) placed.add(k);
+      const extra = Object.keys(defaults).filter((k) => !placed.has(k)).map((k) => [k, k]);
+      if (extra.length) groups.push({ title: "Other", keys: extra });
+
+      for (const group of groups) {
+        const keys = group.keys.filter(([k]) => k in defaults);
+        if (!keys.length) continue;
+        const section = document.createElement("div");
+        section.className = "rescore-group";
+        const h = document.createElement("h3");
+        h.textContent = group.title;
+        const grid = document.createElement("div");
+        grid.className = "rescore-grid";
+        for (const [key, label] of keys) {
+          const lab = document.createElement("label");
+          lab.title = key;
+          const span = document.createElement("span");
+          span.textContent = label;
+          const input = document.createElement("input");
+          input.type = "number";
+          input.step = "any";
+          input.value = defaults[key];
+          input.dataset.key = key;
+          input.addEventListener("input", () => { markRescoreState(); scheduleLoad(); });
+          rescoreInputs.set(key, input);
+          lab.append(span, input);
+          grid.appendChild(lab);
+        }
+        section.append(h, grid);
+        container.appendChild(section);
+      }
+      markRescoreState();
+    }
+
+    document.getElementById("rescore-reset").addEventListener("click", () => {
+      for (const [key, input] of rescoreInputs) input.value = rescoreDefaults[key];
+      markRescoreState();
+      loadFromStart();
+    });
+
+    document.getElementById("rescore-copy").addEventListener("click", async () => {
+      const merged = { ...rescoreDefaults, ...rescoreOverrides() };
+      const text = JSON.stringify(merged, null, 2);
+      try {
+        await navigator.clipboard.writeText(text);
+        statusEl.textContent = "Copied scoring params to clipboard.";
+      } catch {
+        window.prompt("Scoring params:", text);
+      }
+    });
+
+    async function loadRescoreDefaults() {
+      try {
+        const resp = await fetch("/api/scoring-params");
+        const data = await resp.json();
+        buildRescoreForm(data.defaults || {});
+      } catch (err) {
+        errorEl.textContent = "Could not load scoring params: " + (err.message || err);
+      }
+    }
+
+    async function loadQueue() {
+      errorEl.textContent = "";
+      statusEl.textContent = "Loading…";
+      try {
+        const resp = await fetch("/api/queue?" + filterParams().toString());
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || "Request failed");
+        if (data.error && !(data.articles || []).length) {
+          errorEl.textContent = data.error;
+          rows = [];
+          filteredCount = 0;
+          totalPages = 1;
+          currentPage = 1;
+          metaEl.textContent = "";
+          statusEl.textContent = "";
+          render();
+          return;
+        }
+        rows = data.articles || [];
+        filteredCount = data.count || 0;
+        totalPages = data.pages || 1;
+        currentPage = data.page || 1;
+        const perPage = data.per_page || 2000;
+        const from = filteredCount ? (currentPage - 1) * perPage + 1 : 0;
+        const to = (currentPage - 1) * perPage + rows.length;
+        const when = data.generated_at
+          ? new Date(data.generated_at).toLocaleString()
+          : "unknown";
+        const pruned = data.last_prune_at
+          ? ` · last prune ${new Date(data.last_prune_at).toLocaleString()}`
+          : "";
+        const range =
+          filteredCount === 0
+            ? `0 of ${data.total_in_snapshot}`
+            : `${from.toLocaleString()}–${to.toLocaleString()} of ${filteredCount.toLocaleString()} matching · ${Number(data.total_in_snapshot).toLocaleString()} in snapshot`;
+        metaEl.textContent =
+          `Snapshot: ${when}${pruned} · showing ${range}` +
+          (data.rescored ? " · rescored with custom weights" : "");
+        statusEl.textContent = rows.length ? "" : "No articles match filters.";
+        render();
+      } catch (err) {
+        errorEl.textContent = err.message || String(err);
+        statusEl.textContent = "";
+      }
+    }
+
+    function loadFromStart() {
+      currentPage = 1;
+      loadQueue();
+    }
+
+    let debounce;
+    function scheduleLoad() {
+      clearTimeout(debounce);
+      debounce = setTimeout(loadFromStart, 200);
+    }
+
+    document.getElementById("q").addEventListener("input", scheduleLoad);
+    document.getElementById("min_views").addEventListener("change", loadFromStart);
+    for (const id of [
+      "minors", "blp", "ctop", "ai", "chatgpt", "blocked_creator",
+      "reviewer_creator",
+      "notability", "pov", "sports", "violence", "afc", "coi", "promotional", "orphan",
+    ]) {
+      document.getElementById(id).addEventListener("change", loadFromStart);
+    }
+
+    loadRescoreDefaults().then(loadQueue);
+  </script>
+
+  <hr/>
+  <p>
+    <small>
+      Code repository: <a href="https://gitlab.wikimedia.org/tmoney/projo" target="_blank">Projo on GitLab</a>.
+      Made by <a href="https://en.wikipedia.org/wiki/User:Audiodude" target="_blank">Audiodude</a> and
+      <a href="https://en.wikipedia.org/wiki/User:Dreamyshade" target="_blank">Dreamyshade</a>.
+      The owls: <a href="https://commons.wikimedia.org/wiki/File:Travels_in_Europe_and_Northern_Africa_(1901)_-_illustration_-_page_16.png">1901 woodcut</a>
+      and <a href="https://commons.wikimedia.org/wiki/File:Owl_(25818)_-_The_Noun_Project.svg">Noun Project icon</a>.
+    </small>
+  </p>
+</body>
+</html>
