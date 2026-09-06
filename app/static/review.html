@@ -120,7 +120,7 @@
       flex-wrap: wrap;
       gap: 0.5rem 0.85rem;
       align-items: center;
-      margin-bottom: 0.75rem;
+      margin-top: 0.5rem;
       font-size: 0.9rem;
     }
     .filters label {
@@ -195,21 +195,24 @@
       opacity: 0.5;
       cursor: default;
     }
-    .ranking-method {
+    details.ranking-method,
+    details.rescore,
+    details.filter-results {
       margin: 0 0 1rem;
       font-size: 0.9rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 0.35rem 0.6rem;
     }
-    .ranking-method summary {
+    details.ranking-method summary,
+    details.rescore summary,
+    details.filter-results summary {
       cursor: pointer;
       font-weight: 600;
-      color: #333;
-      margin-bottom: 0.5rem;
-    }
-    .ranking-method summary:hover {
-      text-decoration: underline;
+      user-select: none;
     }
     .ranking-method table {
-      margin-top: 0.35rem;
+      margin-top: 0.5rem;
       font-size: 0.85rem;
     }
     .ranking-method th:nth-child(2),
@@ -221,18 +224,6 @@
     .ranking-method code {
       font-size: 0.8em;
       word-break: break-all;
-    }
-    details.rescore {
-      margin: 0 0 1rem;
-      font-size: 0.9rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 0.35rem 0.6rem;
-    }
-    details.rescore summary {
-      cursor: pointer;
-      font-weight: 600;
-      user-select: none;
     }
     details.rescore summary .dirty { color: #8a6d00; font-weight: 500; }
     .rescore-body { margin-top: 0.5rem; }
@@ -292,8 +283,31 @@
     find the unreviewed articles that most need review.
   </p>
 
+  <details class="filter-results">
+    <summary>Filter results</summary>
+    <div class="filters">
+      <label>Search titles <input id="q" type="text" placeholder="Title…" /></label>
+      <label>Min views <input id="min_views" type="number" min="0" step="1" value="0" /></label>
+      <label><input type="checkbox" id="blp" /> Living people</label>
+      <label><input type="checkbox" id="minors" /> Minors</label>
+      <label><input type="checkbox" id="ctop" /> Contentious topic</label>
+      <label><input type="checkbox" id="violence" /> Violence</label>
+      <label><input type="checkbox" id="sports" /> Sports</label>
+      <label><input type="checkbox" id="blocked_creator" /> Creator is blocked</label>
+      <label><input type="checkbox" id="afc" /> Went through AfC</label>
+      <label><input type="checkbox" id="reviewer_creator" /> Creator is NPP or AfC reviewer</label>
+      <label><input type="checkbox" id="chatgpt" /> ChatGPT in refs</label>
+      <label><input type="checkbox" id="ai" /> Tag: AI</label>
+      <label><input type="checkbox" id="notability" /> Tag: Notability</label>
+      <label><input type="checkbox" id="pov" /> Tag: POV</label>
+      <label><input type="checkbox" id="coi" /> Tag: COI</label>
+      <label><input type="checkbox" id="promotional" /> Tag: Promotional</label>
+      <label><input type="checkbox" id="orphan" /> Orphan</label>
+    </div>
+  </details>
+
   <details class="ranking-method">
-    <summary>Details about ranking method</summary>
+    <summary>Details about default scoring method</summary>
     <table>
       <thead>
         <tr>
@@ -435,7 +449,7 @@
   </details>
 
   <details class="rescore" id="rescore">
-    <summary>Rescore <span class="dirty" id="rescore-dirty"></span></summary>
+    <summary>Customize scoring <span class="dirty" id="rescore-dirty"></span></summary>
     <div class="rescore-body">
       <p class="hint">
         Edit any weight to re-rank the snapshot live. Continuous factors
@@ -449,26 +463,6 @@
       </div>
     </div>
   </details>
-
-  <div class="filters">
-    <label>Search titles <input id="q" type="text" placeholder="Title…" /></label>
-    <label>Min views <input id="min_views" type="number" min="0" step="1" value="0" /></label>
-    <label><input type="checkbox" id="blp" /> Living people</label>
-    <label><input type="checkbox" id="minors" /> Minors</label>
-    <label><input type="checkbox" id="ctop" /> Contentious topic</label>
-    <label><input type="checkbox" id="violence" /> Violence</label>
-    <label><input type="checkbox" id="sports" /> Sports</label>
-    <label><input type="checkbox" id="blocked_creator" /> Creator is blocked</label>
-    <label><input type="checkbox" id="afc" /> Went through AfC</label>
-    <label><input type="checkbox" id="reviewer_creator" /> Creator is NPP or AfC reviewer</label>
-    <label><input type="checkbox" id="chatgpt" /> ChatGPT in refs</label>
-    <label><input type="checkbox" id="ai" /> Tag: AI</label>
-    <label><input type="checkbox" id="notability" /> Tag: Notability</label>
-    <label><input type="checkbox" id="pov" /> Tag: POV</label>
-    <label><input type="checkbox" id="coi" /> Tag: COI</label>
-    <label><input type="checkbox" id="promotional" /> Tag: Promotional</label>
-    <label><input type="checkbox" id="orphan" /> Orphan</label>
-  </div>
 
   <p class="meta" id="meta"></p>
   <p id="status"></p>
