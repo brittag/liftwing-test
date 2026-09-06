@@ -159,7 +159,7 @@
       vertical-align: top;
     }
     th.sortable { cursor: pointer; user-select: none; }
-    th.sortable:hover { text-decoration: underline; }
+    th.sortable:hover { text-decoration: none; }
     .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
     .chips {
       display: flex;
@@ -276,15 +276,15 @@
 
   <div class="page-heading">
     <h1>Articles to review</h1>
-    <button type="button" id="chill-mode" class="chill-mode" aria-pressed="false">Chill mode</button>
+    <button type="button" id="chill-mode" class="chill-mode" aria-pressed="false" title="Sort lowest score first">Chill mode</button>
   </div>
   <p class="hint">
-    For <a href="https://en.wikipedia.org/wiki/Wikipedia:New_pages_patrol">new page reviewers</a> for English Wikipedia:
-    find the unreviewed articles that most need review.
+    For <a href="https://en.wikipedia.org/wiki/Wikipedia:New_pages_patrol" target="_blank">new page reviewers</a> for English Wikipedia:
+    find the unreviewed articles with the highest need for review.
   </p>
 
   <details class="filter-results">
-    <summary>Filter results</summary>
+    <summary>Filter list of articles</summary>
     <div class="filters">
       <label>Search titles <input id="q" type="text" placeholder="Title…" /></label>
       <label>Min views <input id="min_views" type="number" min="0" step="1" value="0" /></label>
@@ -474,7 +474,7 @@
       <tr>
         <th id="sort-score" class="sortable">Score ↕</th>
         <th id="sort-title" class="sortable">Title ↕</th>
-        <th id="sort-views" class="sortable">Views/day ↕</th>
+        <th id="sort-views" class="sortable">Avg views per day ↕</th>
         <th id="sort-need" class="sortable">Ref need ↕</th>
         <th id="sort-created" class="sortable">Created ↕</th>
         <th>Factors</th>
@@ -528,6 +528,51 @@
       if (HOT.has(base) || factor.startsWith("ctop")) return "chip hot";
       if (COOL.has(base)) return "chip cool";
       return "chip";
+    }
+
+    const CHIP_TITLES = {
+      "ref-need": "Reference need",
+      views: "Page views",
+      len: "Length",
+      ai: "Tagged as AI-generated",
+      chatgpt: "ChatGPT in references",
+      minor: "BLP likely a minor",
+      blp: "Biography of a living person",
+      ctop: "Contentious topic",
+      notability: "Tagged for notability issues",
+      coi: "Tagged as COI",
+      promotional: "Tagged as promotional",
+      pov: "Tagged as having POV issues",
+      orphan: "Orphaned article",
+      "orphan-cat": "Tagged as orphan",
+      disambig: "Disambiguation page",
+      "blocked-creator": "Creator is blocked",
+      "reviewer-creator": "Creator is NPP or AfC reviewer",
+      AfC: "Accepted AfC submission",
+      sports: "Sports",
+      violence: "Violence",
+    };
+
+    function staleDaysForTitle() {
+      const input = rescoreInputs.get("stale_days");
+      if (input) {
+        const n = Number(input.value);
+        if (Number.isFinite(n) && n > 0) return Math.round(n);
+      }
+      const def = rescoreDefaults.stale_days;
+      if (Number.isFinite(def) && def > 0) return Math.round(def);
+      return 90;
+    }
+
+    function chipTitle(factor) {
+      const colon = factor.indexOf(":");
+      const base = colon === -1 ? factor : factor.slice(0, colon);
+      const rest = colon === -1 ? "" : factor.slice(colon + 1);
+      if (base === "old") return `Older than ${staleDaysForTitle()} days`;
+      if (base === "ctop") {
+        return rest ? `Contentious topic: ${rest}` : "Contentious topic";
+      }
+      return CHIP_TITLES[base] || factor;
     }
 
     function renderPagers() {
@@ -605,6 +650,7 @@
           const span = document.createElement("span");
           span.className = chipClass(f);
           span.textContent = f;
+          span.title = chipTitle(f);
           wrap.appendChild(span);
         }
         factors.appendChild(wrap);
@@ -631,7 +677,7 @@
         score: "Score",
         title: "Title",
         created: "Created",
-        views: "Views/day",
+        views: "Avg views per day",
         need: "Ref need",
       };
       for (const [key, el] of Object.entries(map)) {
@@ -721,7 +767,7 @@
         ["page_len_max", "Page length"],
       ]},
       { title: "Curves & age", keys: [
-        ["pageview_log_cap", "Pageview log cap (views/day)"],
+        ["pageview_log_cap", "Pageview log cap (avg views per day)"],
         ["page_len_log_cap", "Page length log cap (bytes)"],
         ["stale_days", "Stale after (days)"],
         ["older_than_90d", "Stale bonus"],
