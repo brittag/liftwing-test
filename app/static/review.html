@@ -837,12 +837,28 @@
     });
 
     async function loadRescoreDefaults() {
+      const container = document.getElementById("rescore-groups");
       try {
         const resp = await fetch("/api/scoring-params");
-        const data = await resp.json();
-        buildRescoreForm(data.defaults || {});
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) {
+          throw new Error(data.error || `HTTP ${resp.status}`);
+        }
+        const defaults = data.defaults || {};
+        if (!Object.keys(defaults).length) {
+          throw new Error("server returned no scoring parameters");
+        }
+        buildRescoreForm(defaults);
       } catch (err) {
-        errorEl.textContent = "Could not load scoring params: " + (err.message || err);
+        const msg = "Could not load scoring params: " + (err.message || err);
+        errorEl.textContent = msg;
+        if (container && !container.childElementCount) {
+          const p = document.createElement("p");
+          p.className = "hint";
+          p.textContent = msg + " Restart the app if /api/scoring-params is missing.";
+          container.replaceChildren(p);
+        }
+        throw err;
       }
     }
 
@@ -913,7 +929,7 @@
       document.getElementById(id).addEventListener("change", loadFromStart);
     }
 
-    loadRescoreDefaults().then(loadQueue);
+    loadRescoreDefaults().then(loadQueue, loadQueue);
   </script>
 
   <hr/>
