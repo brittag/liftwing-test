@@ -27,6 +27,15 @@ TONE_THRESHOLD = 0.80
 MAX_TONE_PARAGRAPHS = 20
 EDIT_CHECK_BATCH = 20
 MIN_PARAGRAPH_CHARS = 40
+# Hidden maintenance categories that mark tone/NPOV cleanup tags.
+CAT_PROMOTIONAL = "All_articles_with_a_promotional_tone"
+CAT_POV = "All_Wikipedia_neutral_point_of_view_disputes"
+CAT_PEACOCK = "All_articles_with_peacock_terms"
+CLEANUP_TAG_CATEGORIES: tuple[tuple[str, str], ...] = (
+    (CAT_PROMOTIONAL, "promo"),
+    (CAT_POV, "POV"),
+    (CAT_PEACOCK, "peacock"),
+)
 # Generic fallback only — set WIKIMEDIA_USER_AGENT in .env for real API use.
 DEFAULT_USER_AGENT = (
     "ReferenceNeedPrototype/0.1 "
@@ -79,20 +88,41 @@ def fetch_page_summary(
     return data
 
 
+def _normalize_category_title(title: str) -> str:
+    name = title.strip()
+    if name.lower().startswith("category:"):
+        name = name.split(":", 1)[1]
+    return name.replace(" ", "_")
+
+
+def cleanup_tags_from_categories(categories: list[dict[str, Any]] | None) -> list[str]:
+    """Map category titles to short cleanup-tag labels (promo, POV, peacock)."""
+    present = {
+        _normalize_category_title(c.get("title") or "")
+        for c in categories or []
+    }
+    return [label for cat, label in CLEANUP_TAG_CATEGORIES if cat in present]
+
+
 def fetch_plaintext_extract(
     session: requests.Session, title: str, lang: str
-) -> str:
-    """Return plain-text article extract via the Action API."""
+) -> tuple[str, list[str]]:
+    """Return plain-text extract and promo/POV/peacock cleanup tags via the Action API."""
     url = f"https://{lang}.wikipedia.org/w/api.php"
+    clcategories = "|".join(
+        f"Category:{cat.replace('_', ' ')}" for cat, _label in CLEANUP_TAG_CATEGORIES
+    )
     params = {
         "action": "query",
-        "prop": "extracts",
+        "prop": "extracts|categories",
         "explaintext": "1",
         "exsectionformat": "plain",
         "titles": title.strip(),
         "format": "json",
         "formatversion": "2",
         "redirects": "1",
+        "clcategories": clcategories,
+        "cllimit": "max",
     }
     _throttle()
     resp = session.get(url, params=params, timeout=30)
@@ -100,7 +130,10 @@ def fetch_plaintext_extract(
     pages = resp.json().get("query", {}).get("pages", [])
     if not pages or pages[0].get("missing"):
         raise LookupError(f"Article extract not found: {title}")
-    return pages[0].get("extract") or ""
+    page = pages[0]
+    extract = page.get("extract") or ""
+    tags = cleanup_tags_from_categories(page.get("categories"))
+    return extract, tags
 
 
 def split_paragraphs(text: str) -> list[str]:
@@ -177,6 +210,7 @@ def score_article(
         "wikipedia_url": None,
         "revision_id": None,
         "tone_flagged_count": None,
+        "cleanup_tags": None,
         "error": None,
     }
     try:
@@ -189,7 +223,8 @@ def score_article(
             f"https://{lang}.wikipedia.org/wiki/{quote(_normalize_title(display_title), safe=':_()/')}"
         )
 
-        extract = fetch_plaintext_extract(session, display_title, lang)
+        extract, tags = fetch_plaintext_extract(session, display_title, lang)
+        row["cleanup_tags"] = tags
         paragraphs = split_paragraphs(extract)
         row["tone_flagged_count"] = score_tone_flagged_count(
             session, display_title, paragraphs, lang

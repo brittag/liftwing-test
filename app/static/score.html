@@ -132,6 +132,21 @@
     th.sortable:hover { text-decoration: underline; }
     .num { font-variant-numeric: tabular-nums; }
     .err { color: #a40000; }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    .chip {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.1rem 0.35rem;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background: #f6f6f6;
+      color: #333;
+      white-space: nowrap;
+    }
     .hidden { display: none; }
   </style>
 </head>
@@ -159,18 +174,24 @@
     detects the presence of promotional, derogatory, or otherwise subjective language. It's the core of
     the <a href="https://www.mediawiki.org/wiki/Growth/Revise_Tone" target="_blank">Revise Tone</a> task presented
     to newcomers and users of <a href="https://www.mediawiki.org/wiki/VisualEditor/Suggestion_Mode" target="_blank">Suggestion Mode</a>.
-    Can we also use it to predict which articles in a list have the most tone problems? Let's try it!
-    But checking is slow, so this tool is separate from the other sorting tools.
+  </p>
+  <p class="hint">
+    Can we also use it to predict which articles in a list have tone problems?
+    It kind of works. You can try it! But checking is slow, so this tool is separate from the other sorting tools.
   </p>
   <p class="hint">
     Paste Wikipedia article titles (one per line) to count paragraphs with
-    Tone Check probability ≥ 0.80 (first 20 paragraphs).
+    Tone Check probability ≥ 0.80 (within the first 20 paragraphs in the article) and compare to presence
+    of related cleanup templates
+    (<a href="https://en.wikipedia.org/wiki/Category:All_articles_with_a_promotional_tone">promo</a>,
+    <a href="https://en.wikipedia.org/wiki/Category:All_articles_with_peacock_terms" target="_blank">peacock</a>,
+    <a href="https://en.wikipedia.org/wiki/Category:All_Wikipedia_neutral_point_of_view_disputes">POV</a>).
     You can check up to 100 articles at a time.
   </p>
 
   <form id="form">
     <label for="titles">Articles</label>
-    <textarea id="titles" placeholder="Bulgarian Deposit Insurance Fund&#10;Dictionary of Occupational Titles&#10;Washing mitt"></textarea>
+    <textarea id="titles" placeholder="Bulgarian Deposit Insurance Fund&#10;Opus Dei&#10;Washing mitt&#10;Cultural impact of Cher"></textarea>
 
     <label for="lang">Language</label>
     <input id="lang" type="text" value="en" maxlength="12" />
@@ -188,6 +209,7 @@
       <tr>
         <th id="sort-title" class="sortable" title="Click to reverse sort">Title ↕</th>
         <th id="sort-tone" class="sortable" title="Click to reverse sort">Tone flags ↕</th>
+        <th id="sort-tags" class="sortable" title="Click to reverse sort">Cleanup tags ↕</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -204,10 +226,27 @@
     const tbody = table.querySelector("tbody");
     const sortTitle = document.getElementById("sort-title");
     const sortTone = document.getElementById("sort-tone");
+    const sortTags = document.getElementById("sort-tags");
 
     let rows = [];
     let sortKey = "tone";
     let sortDesc = true;
+
+    const TAG_TITLES = {
+      promo: "Tagged as promotional",
+      POV: "Tagged as having POV issues",
+      peacock: "Tagged as having peacock terms",
+    };
+
+    function tagRank(r) {
+      if (!Array.isArray(r.cleanup_tags)) return null;
+      const tags = r.cleanup_tags;
+      let n = 0;
+      if (tags.includes("promo")) n += 4;
+      if (tags.includes("POV")) n += 2;
+      if (tags.includes("peacock")) n += 1;
+      return n;
+    }
 
     function compareRows(a, b) {
       if (sortKey === "title") {
@@ -216,8 +255,8 @@
         });
         return sortDesc ? -cmp : cmp;
       }
-      const av = a.tone_flagged_count;
-      const bv = b.tone_flagged_count;
+      const av = sortKey === "tags" ? tagRank(a) : a.tone_flagged_count;
+      const bv = sortKey === "tags" ? tagRank(b) : b.tone_flagged_count;
       if (av == null && bv == null) return 0;
       if (av == null) return 1;
       if (bv == null) return -1;
@@ -255,7 +294,23 @@
             ? "—"
             : String(r.tone_flagged_count);
 
-        tr.append(titleCell, tone);
+        const tagsCell = document.createElement("td");
+        if (!Array.isArray(r.cleanup_tags)) {
+          tagsCell.textContent = "—";
+        } else if (r.cleanup_tags.length) {
+          const wrap = document.createElement("div");
+          wrap.className = "chips";
+          for (const tag of r.cleanup_tags) {
+            const span = document.createElement("span");
+            span.className = "chip";
+            span.textContent = tag;
+            span.title = TAG_TITLES[tag] || tag;
+            wrap.appendChild(span);
+          }
+          tagsCell.appendChild(wrap);
+        }
+
+        tr.append(titleCell, tone, tagsCell);
         tbody.appendChild(tr);
       }
 
@@ -268,6 +323,12 @@
             ? "Tone flags ↓"
             : "Tone flags ↑"
           : "Tone flags ↕";
+      sortTags.textContent =
+        sortKey === "tags"
+          ? sortDesc
+            ? "Cleanup tags ↓"
+            : "Cleanup tags ↑"
+          : "Cleanup tags ↕";
     }
 
     function setSort(key) {
@@ -282,6 +343,7 @@
 
     sortTitle.addEventListener("click", () => setSort("title"));
     sortTone.addEventListener("click", () => setSort("tone"));
+    sortTags.addEventListener("click", () => setSort("tags"));
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
