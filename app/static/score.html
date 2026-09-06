@@ -157,20 +157,20 @@
   <p class="hint">
     <a href="https://en.wikipedia.org/wiki/Wikipedia:Edit_check/Tone_Check" target="_blank">Tone Check</a>
     detects the presence of promotional, derogatory, or otherwise subjective language. It's the core of
-    the <a href="https://www.mediawiki.org/wiki/Growth/Revise_Tone" target="_blank">Revise Tone</a> task that is presented
-    to newcomers and to users of <a href="https://www.mediawiki.org/wiki/VisualEditor/Suggestion_Mode" target="_blank">Suggestion Mode</a>.
-    Can we also use it to predict which articles in a long list have the most tone problems,
-    even if they're not tagged as having issues? Let's try it!
+    the <a href="https://www.mediawiki.org/wiki/Growth/Revise_Tone" target="_blank">Revise Tone</a> task presented
+    to newcomers and users of <a href="https://www.mediawiki.org/wiki/VisualEditor/Suggestion_Mode" target="_blank">Suggestion Mode</a>.
+    Can we also use it to predict which articles in a list have the most tone problems? Let's try it!
+    But checking is slow, so this tool is separate from the other sorting tools.
   </p>
   <p class="hint">
     Paste Wikipedia article titles (one per line) to count paragraphs with
-    Tone Check probability ≥ 0.80 (first 20 paragraphs). This is slow, so
-    it's separate from the other sorting and ranking tools. You can check up to 100 articles at a time.
+    Tone Check probability ≥ 0.80 (first 20 paragraphs).
+    You can check up to 100 articles at a time.
   </p>
 
   <form id="form">
     <label for="titles">Articles</label>
-    <textarea id="titles" placeholder="Bulgarian Deposit Insurance Fund&#10;Albert Einstein&#10;Douglas Adams"></textarea>
+    <textarea id="titles" placeholder="Bulgarian Deposit Insurance Fund&#10;Dictionary of Occupational Titles&#10;Washing mitt"></textarea>
 
     <label for="lang">Language</label>
     <input id="lang" type="text" value="en" maxlength="12" />

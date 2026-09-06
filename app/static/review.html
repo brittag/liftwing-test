@@ -95,11 +95,13 @@
     h1 { font-size: 1.35rem; margin-bottom: 0.25rem; }
     .page-heading {
       display: flex;
-      align-items: flex-start;
+      align-items: baseline;
       justify-content: space-between;
       gap: 1rem;
+      /* Same collapsed gap as a bare h1 after <hr> (UA 0.67em of h1 size). */
+      margin-top: calc(0.67 * 1.35rem);
     }
-    .page-heading h1 { margin: 0; }
+    .page-heading h1 { margin-top: 0; margin-bottom: 0.25rem; }
     button.chill-mode {
       flex-shrink: 0;
       background: #eefaf2;
